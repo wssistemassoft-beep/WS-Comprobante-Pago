@@ -305,10 +305,12 @@ ${metodo.value === "binance" ? "👤 Binance: " + binanceUser.value : ""}
   warningBox.className = "warning";
   warningBox.innerHTML = `
 ⚠️ <b>IMPORTANTE</b><br>
-Comprobante enviado exitosamente.<br>
-No envíes duplicados.<br><br>
-⏳ Redirección en <b id="count">20</b> segundos.
-`;
+    COMPROBANTE ENVIADO EXITOSAMENTE. No envíes la misma solicitud más de una vez.<br>
+    Los envíos duplicados pueden provocar que el comprobante quede atorado
+    y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
+    ⏳ Serás redireccionado a nuestra página principal en
+    <b id="count">20</b> segundos.
+  `;
 
   const c = document.getElementById("count");
   const timer = setInterval(()=>{
