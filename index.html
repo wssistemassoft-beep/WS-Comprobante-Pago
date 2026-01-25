@@ -353,6 +353,7 @@ button:active{
         <option value="">Selecciona un método</option>
         <option value="binance">Binance</option>
         <option value="transferencia">Transferencia bancaria (México)</option>
+        <option value="oxxo">OXXO Pay</option>
       </select>
 
       <div class="info" id="infoMetodo" style="display:none"></div>
@@ -449,6 +450,17 @@ metodo.addEventListener("change", ()=>{
       👤 <b>Nombre:</b> CHRISTIAN QUIÑONEZ
       <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span>
     `;
+  }
+  
+  else if(metodo.value === "oxxo"){
+    infoMetodo.innerHTML = `
+      🏪 <b>Pago en OXXO</b><br>
+      👉🏻 <b>Dale este número al cajero:</b><br>
+      💳 <b>5101 2523 9079 9774</b>
+      <span class="copy" onclick="copiar(this,'5101 2523 9079 9774')">📋</span><br><br>
+      💵 <b>1 USD = $20 MXN</b><br>
+      ⚠️ <b>OJO:</b> OXXO te cobra de $12 a $15 pesos de comisión
+    `;
   } else {
     infoMetodo.style.display = "none";
     infoMetodo.innerHTML = "";
@@ -499,16 +511,20 @@ btn.addEventListener("click", async ()=>{
   let texto = `🧾 NUEVO COMPROBANTE
 
 📧 Email: ${email.value}
-💳 Método: ${metodo.value === "binance" ? "Binance" : "Transferencia bancaria"}
+💳 Método: ${metodo.value === "binance" ? "Binance" : metodo.value === "oxxo" ? "OXXO Pay" : "Transferencia bancaria"}
 `;
 
   if(metodo.value === "binance"){
-    texto += `💰 Monto: $${usd.value} USDT
+    texto += `💰 Monto: ${usd.value} USDT
 👤 Usuario Binance: ${binanceUser.value}`;
+  } else if(metodo.value === "oxxo"){
+    const mxnEquivalente = (usdVal * RATE).toFixed(2);
+    texto += `💰 Monto: ${usd.value} USD
+💵 Monto MXN: ${mxnEquivalente}`;
   } else {
     const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: $${usd.value} USD
-💵 Monto MXN: $${mxnEquivalente}`;
+    texto += `💰 Monto: ${usd.value} USD
+💵 Monto MXN: ${mxnEquivalente}`;
   }
 
   await enviarTelegram(texto, file.files[0]);
