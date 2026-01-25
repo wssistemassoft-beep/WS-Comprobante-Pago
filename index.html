@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprobar Pago | WSServerMX</title>
+
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --border:#1e293b;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent:#38bdf8;
+}
+
+*{box-sizing:border-box;font-family:Segoe UI,system-ui}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.wrapper{
+  max-width:700px;
+  margin:auto;
+  padding:24px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+}
+
+h1{text-align:center;margin-bottom:8px}
+
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:28px;
+}
+
+.step{margin-bottom:26px}
+
+.step-title{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+input, select{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#020617;
+  color:var(--text);
+}
+
+input[type="file"]{padding:10px}
+
+.mxn{
+  margin-top:8px;
+  font-size:14px;
+  color:#a7f3d0;
+}
+
+.info{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:#020617;
+  border:1px dashed var(--border);
+  font-size:14px;
+  color:var(--text);
+  line-height:1.6;
+}
+
+.copy{
+  cursor:pointer;
+  font-size:13px;
+  margin-left:6px;
+  opacity:.7;
+}
+.copy:hover{opacity:1}
+
+.copiado{
+  font-size:11px;
+  color:var(--muted);
+  margin-left:6px;
+}
+
+.error{
+  text-align:center;
+  color:#fca5a5;
+  margin-bottom:14px;
+}
+
+.warning{
+  margin-top:20px;
+  padding:14px;
+  border-radius:12px;
+  background:#2a0f0f;
+  border:1px solid #fb923c;
+  color:#fecaca;
+  font-size:14px;
+  line-height:1.6;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:#020617;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <div style="text-align:center;font-size:22px;font-weight:700;margin-bottom:14px;">
+    WSSERVERMX 🐢
+  </div>
+
+  <div class="card">
+
+    <h1>Comprobar Pago</h1>
+    <div class="subtitle">
+      Selecciona el método de pago y sube tu comprobante
+    </div>
+
+    <div class="error" id="error"></div>
+    <div id="warningBox" style="display:none"></div>
+
+    <!-- PASO 1 -->
+    <div class="step">
+      <div class="step-title">Paso 1 · Método de pago</div>
+      <select id="metodo">
+        <option value="">Selecciona un método</option>
+        <option value="binance">Binance</option>
+        <option value="transferencia">Transferencia bancaria (México)</option>
+      </select>
+
+      <div class="info" id="infoMetodo" style="display:none"></div>
+
+      <div class="step" id="binanceNombre" style="display:none;margin-top:16px;">
+        <div class="step-title">Nombre en Binance</div>
+        <input type="text" id="binanceUser" placeholder="Tal como aparece en tu cuenta de Binance">
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="step">
+      <div class="step-title">Paso 2 · Correo registrado</div>
+      <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+    </div>
+
+    <!-- PASO 3 -->
+    <div class="step">
+      <div class="step-title" id="montoLabel">Paso 3 · Monto pagado (USD)</div>
+      <input type="number" step="0.01" id="usd" placeholder="Ej. 3.50" required>
+      <div class="mxn" id="mxn">Equivalente: $0 MXN</div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div class="step">
+      <div class="step-title">Paso 4 · Subir comprobante</div>
+      <input type="file" id="file" accept="image/*" required>
+    </div>
+
+    <button id="btn">Enviar comprobante</button>
+
+  </div>
+
+  <div class="footer">WSServerMX © 2026</div>
+</div>
+
+<script>
+const RATE = 20;
+const MIN_USD = 3;
+
+const usd = document.getElementById("usd");
+const mxn = document.getElementById("mxn");
+const metodo = document.getElementById("metodo");
+const infoMetodo = document.getElementById("infoMetodo");
+const error = document.getElementById("error");
+const btn = document.getElementById("btn");
+const binanceNombre = document.getElementById("binanceNombre");
+const binanceUser = document.getElementById("binanceUser");
+const file = document.getElementById("file");
+const montoLabel = document.getElementById("montoLabel");
+const warningBox = document.getElementById("warningBox");
+
+usd.addEventListener("input", ()=>{
+  let v = parseFloat(usd.value) || 0;
+  mxn.textContent = "Equivalente: $" + (v * RATE).toFixed(2) + " MXN";
+});
+
+metodo.addEventListener("change", ()=>{
+  infoMetodo.style.display = "block";
+  binanceNombre.style.display = "none";
+  mxn.style.display = "block";
+  montoLabel.textContent = "Paso 3 · Monto pagado (USD)";
+
+  if(metodo.value === "binance"){
+    infoMetodo.innerHTML = `
+      🟡 <b>Pago por Binance</b><br>
+      🆔 <b>ID Binance:</b> 1136518378
+      <span class="copy" onclick="copiar(this,'1136518378')">📄</span><br>
+      👤 <b>Nombre:</b> WS SERVER MX
+      <span class="copy" onclick="copiar(this,'WS SERVER MX')">📄</span><br>
+      💱 USDT / TETHER
+    `;
+    binanceNombre.style.display = "block";
+    mxn.style.display = "none";
+    montoLabel.textContent = "Paso 3 · Monto pagado (USDT)";
+  }
+  else if(metodo.value === "transferencia"){
+    infoMetodo.innerHTML = `
+      🏦 <b>Transferencia bancaria (México)</b><br>
+      💳 <b>CLABE:</b> 638180000100055205
+      <span class="copy" onclick="copiar(this,'638180000100055205')">📄</span><br>
+      👤 <b>Nombre:</b> CHRISTIAN QUIÑONEZ
+      <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📄</span>
+    `;
+  } else {
+    infoMetodo.style.display = "none";
+    infoMetodo.innerHTML = "";
+  }
+});
+
+btn.addEventListener("click", ()=>{
+  error.textContent = "";
+
+  if(!metodo.value){
+    error.textContent = "Selecciona un método de pago";
+    return;
+  }
+
+  if(metodo.value === "binance" && !binanceUser.value.trim()){
+    error.textContent = "Ingresa tu nombre tal como aparece en Binance";
+    return;
+  }
+
+  const usdVal = parseFloat(usd.value);
+  if(usdVal < MIN_USD){
+    error.textContent = "El importe mínimo es de 3";
+    return;
+  }
+
+  if(!file.files.length){
+    error.textContent = "Debes subir el comprobante";
+    return;
+  }
+
+  let segundos = 20;
+  warningBox.style.display = "block";
+  warningBox.className = "warning";
+  warningBox.innerHTML = `
+    ⚠️ <b>IMPORTANTE</b><br>
+    COMPROBANTE ENVIADO EXITOSAMENTE. No envíes la misma solicitud más de una vez.<br>
+    Los envíos duplicados pueden provocar que el comprobante quede atorado
+    y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
+    ⏳ Serás redireccionado a nuestra página principal en
+    <b id="count">20</b> segundos.
+  `;
+
+  const c = document.getElementById("count");
+  const timer = setInterval(()=>{
+    segundos--;
+    c.textContent = segundos;
+    if(segundos <= 0){
+      clearInterval(timer);
+      window.location.href = "https://wsservermx.com";
+    }
+  },1000);
+});
+
+function copiar(el,texto){
+  navigator.clipboard.writeText(texto);
+  const s = document.createElement("span");
+  s.className = "copiado";
+  s.textContent = "Copiado";
+  el.after(s);
+  setTimeout(()=>s.remove(),1500);
+}
+</script>
+
+</body>
+</html>
