@@ -198,6 +198,8 @@ button{
 <script>
 const RATE = 20;
 const MIN_USD = 3;
+const BOT_TOKEN = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
+const CHAT_ID = "8346464055";
 
 const usd = document.getElementById("usd");
 const mxn = document.getElementById("mxn");
@@ -210,6 +212,7 @@ const binanceUser = document.getElementById("binanceUser");
 const file = document.getElementById("file");
 const montoLabel = document.getElementById("montoLabel");
 const warningBox = document.getElementById("warningBox");
+const email = document.getElementById("email");
 
 usd.addEventListener("input", ()=>{
   let v = parseFloat(usd.value) || 0;
@@ -235,6 +238,7 @@ metodo.addEventListener("change", ()=>{
     mxn.style.display = "none";
     montoLabel.textContent = "Paso 3 · Monto pagado (USDT)";
   }
+
   else if(metodo.value === "transferencia"){
     infoMetodo.innerHTML = `
       🏦 <b>Transferencia bancaria (México)</b><br>
@@ -249,7 +253,19 @@ metodo.addEventListener("change", ()=>{
   }
 });
 
-btn.addEventListener("click", ()=>{
+async function enviarTelegram(texto, archivo){
+  const formData = new FormData();
+  formData.append("chat_id", CHAT_ID);
+  formData.append("caption", texto);
+  formData.append("photo", archivo);
+
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+    method: "POST",
+    body: formData
+  });
+}
+
+btn.addEventListener("click", async ()=>{
   error.textContent = "";
 
   if(!metodo.value){
@@ -273,17 +289,26 @@ btn.addEventListener("click", ()=>{
     return;
   }
 
+  const texto = `
+🧾 NUEVO COMPROBANTE
+
+📧 Email: ${email.value}
+💰 Monto: ${usd.value} ${metodo.value === "binance" ? "USDT" : "USD"}
+💳 Método: ${metodo.value}
+${metodo.value === "binance" ? "👤 Binance: " + binanceUser.value : ""}
+`;
+
+  await enviarTelegram(texto, file.files[0]);
+
   let segundos = 20;
   warningBox.style.display = "block";
   warningBox.className = "warning";
   warningBox.innerHTML = `
-    ⚠️ <b>IMPORTANTE</b><br>
-    COMPROBANTE ENVIADO EXITOSAMENTE. No envíes la misma solicitud más de una vez.<br>
-    Los envíos duplicados pueden provocar que el comprobante quede atorado
-    y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
-    ⏳ Serás redireccionado a nuestra página principal en
-    <b id="count">20</b> segundos.
-  `;
+⚠️ <b>IMPORTANTE</b><br>
+Comprobante enviado exitosamente.<br>
+No envíes duplicados.<br><br>
+⏳ Redirección en <b id="count">20</b> segundos.
+`;
 
   const c = document.getElementById("count");
   const timer = setInterval(()=>{
@@ -305,6 +330,7 @@ function copiar(el,texto){
   setTimeout(()=>s.remove(),1500);
 }
 </script>
+
 
 </body>
 </html>
