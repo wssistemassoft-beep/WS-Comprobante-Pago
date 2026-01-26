@@ -39,7 +39,40 @@ body{
   filter:drop-shadow(0 0 10px rgba(124,58,237,0.6));
   animation:swim 8s ease-in-out infinite;
   z-index:100;
-  pointer-events:none;
+  pointer-events:auto;
+  cursor:pointer;
+  transition:transform 0.3s ease;
+}
+
+.turtle-container:hover{
+  transform:scale(1.1);
+}
+
+.turtle-container.flipped{
+  animation:flipAndLeave 3s ease-out forwards !important;
+}
+
+@keyframes flipAndLeave{
+  0%{
+    transform:rotate(0deg);
+    opacity:1;
+  }
+  25%{
+    transform:rotate(180deg) scale(1.4);
+    opacity:1;
+  }
+  50%{
+    transform:rotate(180deg) scale(1.4);
+    opacity:1;
+  }
+  65%{
+    transform:rotate(360deg) scale(1);
+    opacity:1;
+  }
+  100%{
+    transform:rotate(360deg) translateY(-1000px);
+    opacity:0;
+  }
 }
 
 @keyframes swim{
@@ -516,6 +549,26 @@ document.querySelectorAll('.input-turtle').forEach(turtle => {
       pachitaMsg.classList.remove('show');
     }, 5000);
   });
+});
+
+// Tortuguita nadadora
+const turtleContainer = document.querySelector('.turtle-container');
+let turtleClicked = false;
+
+turtleContainer.addEventListener('click', (e) => {
+  if(turtleClicked) return;
+  turtleClicked = true;
+  
+  const currentLeft = turtleContainer.offsetLeft;
+  const currentTop = turtleContainer.offsetTop;
+  
+  turtleContainer.style.left = currentLeft + 'px';
+  turtleContainer.style.top = currentTop + 'px';
+  turtleContainer.style.animation = 'flipAndLeave 3s ease-out forwards';
+  
+  setTimeout(() => {
+    turtleContainer.remove();
+  }, 3000);
 });
 
 usd.addEventListener("input", ()=>{
