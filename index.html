@@ -408,7 +408,7 @@ button:active{
   margin-top:24px;
 }
 
-.pachita-message{
+.panchita-message{
   position:fixed;
   bottom:20px;
   right:20px;
@@ -426,7 +426,7 @@ button:active{
   max-width:280px;
 }
 
-.pachita-message.show{
+.panchita-message.show{
   transform:translateY(0);
   opacity:1;
 }
@@ -541,8 +541,8 @@ button:active{
   <div class="footer">BY WSSERVERMX © 2026</div>
 </div>
 
-<div class="pachita-message" id="pachitaMsg">
-  🐢 ¡Hola! Soy Pachita, la mascota de WS. Tengo 2 añitos 💚
+<div class="panchita-message" id="panchitaMsg">
+  🐢 ¡Hola! Soy Panchita, la mascota de WS. Tengo 2 añitos y soy más rápida de lo que crees 💚
 </div>
 
 <script>
@@ -573,15 +573,15 @@ for(let i=0;i<20;i++){
   document.body.appendChild(s);
 }
 
-const pachitaMsg = document.getElementById('pachitaMsg');
+const panchitaMsg = document.getElementById('panchitaMsg');
 document.querySelectorAll('.input-turtle').forEach(turtle => {
   turtle.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    pachitaMsg.classList.add('show');
+    panchitaMsg.classList.add('show');
     setTimeout(() => {
-      pachitaMsg.classList.remove('show');
-    }, 5000);
+      panchitaMsg.classList.remove('show');
+    }, 9000);
   });
 });
 
