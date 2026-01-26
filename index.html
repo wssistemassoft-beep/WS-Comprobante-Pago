@@ -430,6 +430,34 @@ button:active{
   transform:translateY(0);
   opacity:1;
 }
+
+.security-box{
+  background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.05));
+  border:1px solid var(--success);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:32px;
+  text-align:center;
+  box-shadow:0 4px 15px rgba(16,185,129,0.1);
+}
+
+.security-box .title{
+  font-size:16px;
+  font-weight:700;
+  color:var(--success);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.security-box .description{
+  font-size:13px;
+  color:var(--text);
+  line-height:1.6;
+  opacity:0.9;
+}
 </style>
 </head>
 
@@ -444,6 +472,14 @@ button:active{
   </div>
 
   <div class="card">
+
+    <div class="security-box">
+      <div class="title">🔒 PAGO 100% SEGURO</div>
+      <div class="description">
+        Nosotros <b>JAMÁS</b> te pediremos datos de tu tarjeta o cuenta.<br>
+        Todo lo haces tú mismo desde la app de tu banco.
+      </div>
+    </div>
 
     <h1>Comprobar Pago</h1>
     <div class="subtitle">
