@@ -164,7 +164,10 @@ h1{
   margin-bottom:36px;
 }
 
-.step{margin-bottom:28px}
+.step{
+  margin-bottom:28px;
+  position:relative;
+}
 
 .step-title{
   font-size:15px;
@@ -176,6 +179,41 @@ h1{
   background-clip:text;
 }
 
+.input-wrapper{
+  position:relative;
+}
+
+.input-turtle{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%) scale(0);
+  font-size:20px;
+  opacity:0;
+  transition:all 0.3s ease;
+  pointer-events:auto;
+  filter:drop-shadow(0 0 6px rgba(124,58,237,0.6));
+  cursor:pointer;
+  z-index:10;
+}
+
+input:focus + .input-turtle,
+select:focus + .input-turtle{
+  transform:translateY(-50%) scale(1);
+  opacity:1;
+  animation:wiggle 1s ease-in-out infinite;
+  pointer-events:auto;
+}
+
+.input-turtle:hover{
+  transform:translateY(-50%) scale(1.1);
+}
+
+@keyframes wiggle{
+  0%, 100%{transform:translateY(-50%) scale(1) rotate(-5deg)}
+  50%{transform:translateY(-50%) scale(1) rotate(5deg)}
+}
+
 input, select{
   width:100%;
   padding:14px 16px;
@@ -185,6 +223,18 @@ input, select{
   color:var(--text);
   font-size:15px;
   transition:all 0.3s ease;
+}
+
+input[type="number"]{
+  padding-right:45px;
+  direction:ltr;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  position:absolute;
+  left:5px;
+  right:auto;
 }
 
 input:focus, select:focus{
@@ -324,6 +374,29 @@ button:active{
   color:var(--muted);
   margin-top:24px;
 }
+
+.pachita-message{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:linear-gradient(135deg, var(--primary), var(--accent));
+  color:white;
+  padding:16px 20px;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(124,58,237,0.4);
+  font-size:14px;
+  font-weight:600;
+  transform:translateY(150px);
+  opacity:0;
+  transition:all 0.4s ease;
+  z-index:1000;
+  max-width:280px;
+}
+
+.pachita-message.show{
+  transform:translateY(0);
+  opacity:1;
+}
 </style>
 </head>
 
@@ -349,29 +422,41 @@ button:active{
 
     <div class="step">
       <div class="step-title">Paso 1 · Método de pago</div>
-      <select id="metodo">
-        <option value="">Selecciona un método</option>
-        <option value="binance">Binance</option>
-        <option value="transferencia">Transferencia bancaria (México)</option>
-        <option value="oxxo">OXXO Pay</option>
-      </select>
+      <div class="input-wrapper">
+        <select id="metodo">
+          <option value="">Selecciona un método</option>
+          <option value="binance">Binance</option>
+          <option value="transferencia">Transferencia bancaria (México)</option>
+          <option value="oxxo">OXXO Pay</option>
+        </select>
+        <span class="input-turtle">🐢</span>
+      </div>
 
       <div class="info" id="infoMetodo" style="display:none"></div>
 
       <div class="step" id="binanceNombre" style="display:none;margin-top:16px;">
         <div class="step-title">Nombre en Binance</div>
-        <input type="text" id="binanceUser" placeholder="Tal como aparece en tu cuenta de Binance">
+        <div class="input-wrapper">
+          <input type="text" id="binanceUser" placeholder="Tal como aparece en tu cuenta de Binance">
+          <span class="input-turtle">🐢</span>
+        </div>
       </div>
     </div>
 
     <div class="step">
       <div class="step-title">Paso 2 · Tu correo registrado en nuestro server</div>
-      <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+      <div class="input-wrapper">
+        <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+        <span class="input-turtle">🐢</span>
+      </div>
     </div>
 
     <div class="step">
       <div class="step-title" id="montoLabel">Paso 3 · Monto pagado (USD)</div>
-      <input type="number" step="0.01" id="usd" placeholder="Ej. 3.50" required>
+      <div class="input-wrapper">
+        <input type="number" step="0.01" id="usd" placeholder="Ej. 3.50" required>
+        <span class="input-turtle">🐢</span>
+      </div>
       <div class="mxn" id="mxn">Equivalente: $0 MXN</div>
     </div>
 
@@ -385,6 +470,10 @@ button:active{
   </div>
 
   <div class="footer">WSServerMX © 2026</div>
+</div>
+
+<div class="pachita-message" id="pachitaMsg">
+  🐢 ¡Hola! Soy Pachita, la mascota de WS. Tengo 2 añitos 💚
 </div>
 
 <script>
@@ -415,6 +504,19 @@ for(let i=0;i<20;i++){
   s.style.animationDelay=Math.random()*4+'s';
   document.body.appendChild(s);
 }
+
+// Mensaje de Pachita
+const pachitaMsg = document.getElementById('pachitaMsg');
+document.querySelectorAll('.input-turtle').forEach(turtle => {
+  turtle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    pachitaMsg.classList.add('show');
+    setTimeout(() => {
+      pachitaMsg.classList.remove('show');
+    }, 5000);
+  });
+});
 
 usd.addEventListener("input", ()=>{
   let v = parseFloat(usd.value) || 0;
@@ -525,12 +627,12 @@ btn.addEventListener("click", async ()=>{
 👤 Usuario Binance: ${binanceUser.value}`;
   } else if(metodo.value === "oxxo"){
     const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: ${usd.value} USD
-💵 Monto MXN: ${mxnEquivalente}`;
+    texto += `💰 Monto: $${usd.value} USD
+💵 Monto MXN: $${mxnEquivalente}`;
   } else {
     const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: ${usd.value} USD
-💵 Monto MXN: ${mxnEquivalente}`;
+    texto += `💰 Monto: $${usd.value} USD
+💵 Monto MXN: $${mxnEquivalente}`;
   }
 
   await enviarTelegram(texto, file.files[0]);
