@@ -53,47 +53,19 @@ body{
 }
 
 @keyframes flipAndLeave{
-  0%{
-    transform:rotate(0deg);
-    opacity:1;
-  }
-  25%{
-    transform:rotate(180deg) scale(1.4);
-    opacity:1;
-  }
-  50%{
-    transform:rotate(180deg) scale(1.4);
-    opacity:1;
-  }
-  65%{
-    transform:rotate(360deg) scale(1);
-    opacity:1;
-  }
-  100%{
-    transform:rotate(360deg) translateY(-1000px);
-    opacity:0;
-  }
+  0%{transform:rotate(0deg);opacity:1;}
+  25%{transform:rotate(180deg) scale(1.4);opacity:1;}
+  50%{transform:rotate(180deg) scale(1.4);opacity:1;}
+  65%{transform:rotate(360deg) scale(1);opacity:1;}
+  100%{transform:rotate(360deg) translateY(-1000px);opacity:0;}
 }
 
 @keyframes swim{
-  0%{
-    left:-70px;
-    top:20%;
-  }
-  25%{
-    top:15%;
-  }
-  50%{
-    left:50%;
-    top:30%;
-  }
-  75%{
-    top:25%;
-  }
-  100%{
-    left:110%;
-    top:20%;
-  }
+  0%{left:-70px;top:20%;}
+  25%{top:15%;}
+  50%{left:50%;top:30%;}
+  75%{top:25%;}
+  100%{left:110%;top:20%;}
 }
 
 .sparkle{
@@ -358,7 +330,15 @@ input[type="file"]::file-selector-button:hover{
   line-height:1.8;
 }
 
-button{
+/* ==========================================
+   BOTÓN PRINCIPAL + ESTADOS DE BLOQUEO
+   ========================================== */
+
+.btn-wrapper{
+  position:relative;
+}
+
+button#btn{
   width:100%;
   padding:18px;
   border:none;
@@ -372,9 +352,13 @@ button{
   box-shadow:0 4px 20px rgba(124,58,237,0.4);
   position:relative;
   overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 
-button::before{
+button#btn::before{
   content:'';
   position:absolute;
   top:50%;
@@ -387,19 +371,138 @@ button::before{
   transition:width 0.6s, height 0.6s;
 }
 
-button:hover::before{
+button#btn:hover:not(:disabled)::before{
   width:350px;
   height:350px;
 }
 
-button:hover{
+button#btn:hover:not(:disabled){
   transform:translateY(-3px);
   box-shadow:0 8px 30px rgba(124,58,237,0.6);
 }
 
-button:active{
+button#btn:active:not(:disabled){
   transform:translateY(0);
 }
+
+/* Estado: enviando */
+button#btn.sending{
+  background:linear-gradient(135deg, #4a2090, #0a8499);
+  cursor:not-allowed;
+  transform:none !important;
+  box-shadow:0 4px 20px rgba(124,58,237,0.2);
+}
+
+/* Estado: bloqueado por spam */
+button#btn.locked{
+  background:linear-gradient(135deg, #1e1e2e, #1a2535);
+  cursor:not-allowed;
+  transform:none !important;
+  box-shadow:0 0 0 2px rgba(248,113,113,0.5),
+             0 0 20px rgba(248,113,113,0.15),
+             inset 0 0 30px rgba(0,0,0,0.4);
+  border:1px solid rgba(248,113,113,0.4);
+  color:#f87171;
+  animation:lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse{
+  0%,100%{box-shadow:0 0 0 2px rgba(248,113,113,0.5), 0 0 20px rgba(248,113,113,0.15), inset 0 0 30px rgba(0,0,0,0.4);}
+  50%{box-shadow:0 0 0 4px rgba(248,113,113,0.3), 0 0 35px rgba(248,113,113,0.25), inset 0 0 30px rgba(0,0,0,0.4);}
+}
+
+/* Estado: completado */
+button#btn.done{
+  background:linear-gradient(135deg, #065f46, #0d9488);
+  cursor:not-allowed;
+  transform:none !important;
+  box-shadow:0 4px 20px rgba(16,185,129,0.4);
+}
+
+/* Ícono de candado animado */
+.lock-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  animation:lockShake 0.5s ease-in-out;
+}
+
+@keyframes lockShake{
+  0%,100%{transform:rotate(0deg) scale(1);}
+  20%{transform:rotate(-15deg) scale(1.2);}
+  40%{transform:rotate(15deg) scale(1.2);}
+  60%{transform:rotate(-8deg) scale(1.1);}
+  80%{transform:rotate(8deg) scale(1.1);}
+}
+
+/* Spinner de carga */
+.spinner{
+  width:20px;
+  height:20px;
+  border:3px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  flex-shrink:0;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* Barra de cooldown */
+.cooldown-bar{
+  width:100%;
+  height:4px;
+  background:rgba(248,113,113,0.15);
+  border-radius:0 0 14px 14px;
+  margin-top:0;
+  overflow:hidden;
+  display:none;
+}
+
+.cooldown-bar.visible{
+  display:block;
+}
+
+.cooldown-fill{
+  height:100%;
+  background:linear-gradient(90deg, #f87171, #ef4444);
+  border-radius:0 0 14px 14px;
+  width:100%;
+  transition:width 1s linear;
+  box-shadow:0 0 8px rgba(248,113,113,0.6);
+}
+
+/* Mensaje de cooldown */
+.cooldown-msg{
+  display:none;
+  text-align:center;
+  margin-top:12px;
+  padding:12px 16px;
+  border-radius:12px;
+  background:rgba(248,113,113,0.08);
+  border:1px solid rgba(248,113,113,0.3);
+  color:#fca5a5;
+  font-size:13px;
+  font-weight:600;
+  line-height:1.6;
+  animation:fadeInDown 0.3s ease;
+}
+
+.cooldown-msg.visible{
+  display:block;
+}
+
+@keyframes fadeInDown{
+  from{opacity:0;transform:translateY(-8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ==========================================
+   FIN ESTILOS BOTÓN
+   ========================================== */
 
 .footer{
   text-align:center;
@@ -534,7 +637,18 @@ button:active{
       <input type="file" id="file" accept="image/*" required>
     </div>
 
-    <button id="btn">Enviar comprobante</button>
+    <!-- BOTÓN CON ANTI-SPAM -->
+    <div class="btn-wrapper">
+      <button id="btn">
+        <span id="btnIcon">📤</span>
+        <span id="btnText">Enviar comprobante</span>
+      </button>
+      <div class="cooldown-bar" id="cooldownBar">
+        <div class="cooldown-fill" id="cooldownFill"></div>
+      </div>
+    </div>
+
+    <div class="cooldown-msg" id="cooldownMsg"></div>
 
   </div>
 
@@ -551,19 +665,35 @@ const MIN_USD = 3;
 const BOT_TOKEN = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
 const CHAT_ID = "8346464055";
 
-const usd = document.getElementById("usd");
-const mxn = document.getElementById("mxn");
-const metodo = document.getElementById("metodo");
-const infoMetodo = document.getElementById("infoMetodo");
-const error = document.getElementById("error");
-const btn = document.getElementById("btn");
-const binanceNombre = document.getElementById("binanceNombre");
-const binanceUser = document.getElementById("binanceUser");
-const file = document.getElementById("file");
-const montoLabel = document.getElementById("montoLabel");
-const warningBox = document.getElementById("warningBox");
-const email = document.getElementById("email");
+// ============================================================
+// CONFIG ANTI-SPAM
+// ============================================================
+const COOLDOWN_SECONDS = 60; // segundos de espera entre envíos
+let isSending = false;       // evita doble click mientras procesa
+let isLocked = false;        // cooldown activo
+let cooldownTimer = null;
+let alreadySent = false;     // bloqueo permanente tras envío exitoso
+// ============================================================
 
+const usd       = document.getElementById("usd");
+const mxn       = document.getElementById("mxn");
+const metodo    = document.getElementById("metodo");
+const infoMetodo= document.getElementById("infoMetodo");
+const error     = document.getElementById("error");
+const btn       = document.getElementById("btn");
+const btnIcon   = document.getElementById("btnIcon");
+const btnText   = document.getElementById("btnText");
+const binanceNombre = document.getElementById("binanceNombre");
+const binanceUser   = document.getElementById("binanceUser");
+const file          = document.getElementById("file");
+const montoLabel    = document.getElementById("montoLabel");
+const warningBox    = document.getElementById("warningBox");
+const email         = document.getElementById("email");
+const cooldownBar   = document.getElementById("cooldownBar");
+const cooldownFill  = document.getElementById("cooldownFill");
+const cooldownMsg   = document.getElementById("cooldownMsg");
+
+/* ---- sparkles ---- */
 for(let i=0;i<20;i++){
   const s=document.createElement('div');
   s.className='sparkle';
@@ -573,43 +703,39 @@ for(let i=0;i<20;i++){
   document.body.appendChild(s);
 }
 
+/* ---- Panchita ---- */
 const panchitaMsg = document.getElementById('panchitaMsg');
 document.querySelectorAll('.input-turtle').forEach(turtle => {
   turtle.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     panchitaMsg.classList.add('show');
-    setTimeout(() => {
-      panchitaMsg.classList.remove('show');
-    }, 9000);
+    setTimeout(() => { panchitaMsg.classList.remove('show'); }, 9000);
   });
 });
 
+/* ---- Tortuga flotante ---- */
 const turtleContainer = document.querySelector('.turtle-container');
 let turtleClicked = false;
-
-turtleContainer.addEventListener('click', (e) => {
+turtleContainer.addEventListener('click', () => {
   if(turtleClicked) return;
   turtleClicked = true;
-  
   const currentLeft = turtleContainer.offsetLeft;
-  const currentTop = turtleContainer.offsetTop;
-  
+  const currentTop  = turtleContainer.offsetTop;
   turtleContainer.style.left = currentLeft + 'px';
-  turtleContainer.style.top = currentTop + 'px';
+  turtleContainer.style.top  = currentTop  + 'px';
   turtleContainer.style.animation = 'flipAndLeave 3s ease-out forwards';
-  
-  setTimeout(() => {
-    turtleContainer.remove();
-  }, 3000);
+  setTimeout(() => { turtleContainer.remove(); }, 3000);
 });
 
-usd.addEventListener("input", ()=>{
+/* ---- Conversión USD → MXN ---- */
+usd.addEventListener("input", () => {
   let v = parseFloat(usd.value) || 0;
   mxn.textContent = "Equivalente: $" + (v * RATE).toFixed(2) + " MXN";
 });
 
-metodo.addEventListener("change", ()=>{
+/* ---- Método de pago ---- */
+metodo.addEventListener("change", () => {
   infoMetodo.style.display = "block";
   binanceNombre.style.display = "none";
   mxn.style.display = "block";
@@ -628,7 +754,6 @@ metodo.addEventListener("change", ()=>{
     mxn.style.display = "none";
     montoLabel.textContent = "Paso 3 · Monto pagado (USDT)";
   }
-
   else if(metodo.value === "transferencia"){
     infoMetodo.innerHTML = `
       🏦 <b>Transferencia bancaria (México)</b><br>
@@ -642,7 +767,6 @@ metodo.addEventListener("change", ()=>{
       </div>
     `;
   }
-  
   else if(metodo.value === "oxxo"){
     infoMetodo.innerHTML = `
       🏪 <b>Pago en OXXO</b><br>
@@ -661,6 +785,7 @@ metodo.addEventListener("change", ()=>{
   }
 });
 
+/* ---- Envío a Telegram ---- */
 async function enviarTelegram(texto, archivo){
   const formData = new FormData();
   formData.append("chat_id", CHAT_ID);
@@ -673,7 +798,76 @@ async function enviarTelegram(texto, archivo){
   });
 }
 
-btn.addEventListener("click", async ()=>{
+/* ============================================================
+   ANTI-SPAM: inicia cooldown visual
+   ============================================================ */
+function iniciarCooldown(){
+  isLocked = true;
+  let segundosRestantes = COOLDOWN_SECONDS;
+
+  // Estado visual: candado
+  btn.disabled = true;
+  btn.className = 'locked';
+  btnIcon.innerHTML = '<span class="lock-icon">🔒</span>';
+  btnText.textContent = `Bloqueado · espera ${segundosRestantes}s`;
+
+  // Barra de cooldown
+  cooldownBar.classList.add('visible');
+  cooldownFill.style.width = '100%';
+
+  // Mensaje explicativo
+  cooldownMsg.classList.add('visible');
+  cooldownMsg.innerHTML = `
+    🔒 <b>Botón bloqueado por ${COOLDOWN_SECONDS} segundos</b><br>
+    Enviando el mismo comprobante múltiples veces puede causar
+    que tu solicitud quede atorada hasta <b>4 horas</b>. Por favor espera.
+  `;
+
+  // Cooldown tick
+  cooldownTimer = setInterval(() => {
+    segundosRestantes--;
+    const pct = (segundosRestantes / COOLDOWN_SECONDS) * 100;
+    cooldownFill.style.width = pct + '%';
+    btnText.textContent = `Bloqueado · espera ${segundosRestantes}s`;
+
+    if(segundosRestantes <= 0){
+      clearInterval(cooldownTimer);
+      desbloquearBoton();
+    }
+  }, 1000);
+}
+
+function desbloquearBoton(){
+  isLocked = false;
+  btn.disabled = false;
+  btn.className = '';
+  btnIcon.textContent = '📤';
+  btnText.textContent = 'Enviar comprobante';
+
+  cooldownBar.classList.remove('visible');
+  cooldownFill.style.width = '100%';
+
+  cooldownMsg.classList.remove('visible');
+  cooldownMsg.innerHTML = '';
+}
+
+function bloquearPermanente(){
+  alreadySent = true;
+  btn.disabled = true;
+  btn.className = 'done';
+  btnIcon.textContent = '✅';
+  btnText.textContent = 'Comprobante enviado';
+  cooldownBar.classList.remove('visible');
+  cooldownMsg.classList.remove('visible');
+}
+
+/* ---- Click del botón ---- */
+btn.addEventListener("click", async () => {
+
+  // Bloqueos de estado
+  if(isSending || isLocked || alreadySent) return;
+
+  // Validaciones
   error.textContent = "";
   error.style.display = "none";
 
@@ -682,77 +876,87 @@ btn.addEventListener("click", async ()=>{
     error.style.display = "block";
     return;
   }
-
   if(metodo.value === "binance" && !binanceUser.value.trim()){
     error.textContent = "⚠️ Ingresa tu nombre tal como aparece en Binance";
     error.style.display = "block";
     return;
   }
-
   const usdVal = parseFloat(usd.value);
   if(usdVal < MIN_USD){
     error.textContent = "⚠️ El importe mínimo es de $3 USD";
     error.style.display = "block";
     return;
   }
-
   if(!file.files.length){
     error.textContent = "⚠️ Debes subir el comprobante";
     error.style.display = "block";
     return;
   }
 
-  let texto = `🧾 NUEVO COMPROBANTE
+  // Estado: enviando
+  isSending = true;
+  btn.disabled = true;
+  btn.className = 'sending';
+  btnIcon.innerHTML = '<span class="spinner"></span>';
+  btnText.textContent = 'Enviando...';
 
-📧 Email: ${email.value}
-💳 Método: ${metodo.value === "binance" ? "Binance" : metodo.value === "oxxo" ? "OXXO Pay" : "Transferencia bancaria"}
-`;
+  let texto = `🧾 NUEVO COMPROBANTE\n\n📧 Email: ${email.value}\n💳 Método: ${
+    metodo.value === "binance" ? "Binance" : metodo.value === "oxxo" ? "OXXO Pay" : "Transferencia bancaria"
+  }\n`;
 
   if(metodo.value === "binance"){
-    texto += `💰 Monto: ${usd.value} USDT
-👤 Usuario Binance: ${binanceUser.value}`;
-  } else if(metodo.value === "oxxo"){
-    const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: $${usd.value} USD
-💵 Monto MXN: $${mxnEquivalente}`;
+    texto += `💰 Monto: ${usd.value} USDT\n👤 Usuario Binance: ${binanceUser.value}`;
   } else {
     const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: $${usd.value} USD
-💵 Monto MXN: $${mxnEquivalente}`;
+    texto += `💰 Monto: $${usd.value} USD\n💵 Monto MXN: $${mxnEquivalente}`;
   }
 
-  await enviarTelegram(texto, file.files[0]);
+  try {
+    await enviarTelegram(texto, file.files[0]);
 
-  let segundos = 20;
-  warningBox.style.display = "block";
-  warningBox.className = "warning";
-  warningBox.innerHTML = `
-    ✅ <b>¡COMPROBANTE ENVIADO EXITOSAMENTE!</b><br><br>
-    ⚠️ <b>IMPORTANTE:</b> No envíes la misma solicitud más de una vez.<br>
-    Los envíos duplicados pueden provocar que el comprobante quede atorado
-    y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
-    ⏳ Serás redireccionado a nuestra página principal en
-    <b id="count">20</b> segundos.
-  `;
+    // Éxito: mensaje + bloqueo permanente
+    bloquearPermanente();
 
-  const c = document.getElementById("count");
-  const timer = setInterval(()=>{
-    segundos--;
-    c.textContent = segundos;
-    if(segundos <= 0){
-      clearInterval(timer);
-      window.location.href = "https://wsservermx.com";
-    }
-  },1000);
+    let segundos = 20;
+    warningBox.style.display = "block";
+    warningBox.className = "warning";
+    warningBox.innerHTML = `
+      ✅ <b>¡COMPROBANTE ENVIADO EXITOSAMENTE!</b><br><br>
+      ⚠️ <b>IMPORTANTE:</b> No envíes la misma solicitud más de una vez.<br>
+      Los envíos duplicados pueden provocar que el comprobante quede atorado
+      y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
+      ⏳ Serás redireccionado a nuestra página principal en
+      <b id="count">20</b> segundos.
+    `;
+
+    const c = document.getElementById("count");
+    const timer = setInterval(() => {
+      segundos--;
+      c.textContent = segundos;
+      if(segundos <= 0){
+        clearInterval(timer);
+        window.location.href = "https://wsservermx.com";
+      }
+    }, 1000);
+
+  } catch(e) {
+    // Error: mostrar y arrancar cooldown
+    error.textContent = "⚠️ Error al enviar. Intenta de nuevo en unos segundos.";
+    error.style.display = "block";
+    isSending = false;
+    iniciarCooldown();
+  } finally {
+    if(!alreadySent) isSending = false;
+  }
 });
 
-function copiar(el,texto){
+function copiar(el, texto){
   navigator.clipboard.writeText(texto);
   const s = document.createElement("span");
   s.className = "copiado";
   s.textContent = "✓ Copiado";
   el.after(s);
-  setTimeout(()=>s.remove(),1500);
+  setTimeout(() => s.remove(), 1500);
 }
 </script>
 
