@@ -38,7 +38,6 @@ body{
     radial-gradient(ellipse 50% 40% at 90% 80%, rgba(6,182,212,0.08) 0%, transparent 60%);
 }
 
-/* ── Grid de puntos de fondo ── */
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -48,7 +47,6 @@ body::before{
   z-index:0;
 }
 
-/* ── Sparkles ── */
 .sparkle{
   position:fixed;
   width:2px;height:2px;
@@ -65,7 +63,6 @@ body::before{
   50%{opacity:.8;transform:scale(1.5)}
 }
 
-/* ── Tortuga flotante en pantalla ── */
 .turtle-float{
   position:fixed;
   font-size:38px;
@@ -92,7 +89,6 @@ body::before{
   100%{transform:rotate(360deg) translateY(-900px);opacity:0}
 }
 
-/* ── Layout principal ── */
 .wrapper{
   position:relative;z-index:2;
   min-height:100vh;
@@ -101,7 +97,6 @@ body::before{
   padding:28px 16px 48px;
 }
 
-/* ── Logo ── */
 .logo{
   font-size:26px;font-weight:900;
   letter-spacing:-1px;
@@ -123,7 +118,6 @@ body::before{
   50%{transform:translateY(-10px) rotate(5deg)}
 }
 
-/* ── Card ── */
 .card{
   width:100%;max-width:580px;
   background:linear-gradient(160deg,#0f1326 0%,#0c1020 100%);
@@ -142,7 +136,6 @@ body::before{
   background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),rgba(6,182,212,.4),transparent);
 }
 
-/* ── Banner seguridad ── */
 .sec-banner{
   display:flex;align-items:flex-start;gap:12px;
   padding:14px 16px;
@@ -155,21 +148,15 @@ body::before{
 .sec-banner .icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .sec-banner b{color:#6ee7b7}
 
-/* ── Progress bar de pasos ── */
-.progress-wrap{
-  margin-bottom:32px;
-}
+.progress-wrap{margin-bottom:32px;}
 .progress-steps{
   display:flex;align-items:center;justify-content:center;
-  gap:0;
-  position:relative;
+  gap:0;position:relative;
 }
 .step-dot-wrap{
   display:flex;flex-direction:column;
-  align-items:center;
-  gap:6px;
-  position:relative;
-  z-index:1;
+  align-items:center;gap:6px;
+  position:relative;z-index:1;
 }
 .step-dot{
   width:40px;height:40px;
@@ -180,8 +167,7 @@ body::before{
   font-size:15px;font-weight:700;
   color:var(--muted);
   transition:all .4s ease;
-  position:relative;
-  cursor:default;
+  position:relative;cursor:default;
 }
 .step-dot.active{
   border-color:var(--primary);
@@ -208,11 +194,9 @@ body::before{
 .step-label{
   font-size:10.5px;font-weight:600;
   color:var(--muted);
-  text-align:center;
-  letter-spacing:.3px;
+  text-align:center;letter-spacing:.3px;
   transition:color .3s;
-  white-space:nowrap;
-  max-width:72px;
+  white-space:nowrap;max-width:72px;
 }
 .step-dot-wrap.active .step-label{color:var(--primary-light)}
 .step-dot-wrap.done .step-label{color:var(--success)}
@@ -220,8 +204,7 @@ body::before{
 .step-line{
   flex:1;height:2px;
   background:var(--border2);
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
   margin-bottom:22px;
   min-width:20px;max-width:60px;
 }
@@ -233,18 +216,9 @@ body::before{
 }
 .step-line.filled .step-line-fill{transform:scaleX(1)}
 
-/* ── Paneles de pasos ── */
-.steps-outer{
-  position:relative;
-  overflow:hidden;
-  min-height:280px;
-}
-.step-panel{
-  display:none;
-  animation:panelIn .35s ease both;
-}
+.steps-outer{position:relative;overflow:hidden;min-height:280px;}
+.step-panel{display:none;animation:panelIn .35s ease both;}
 .step-panel.active{display:block}
-.step-panel.exit{animation:panelOut .25s ease both}
 @keyframes panelIn{
   from{opacity:0;transform:translateX(30px)}
   to{opacity:1;transform:translateX(0)}
@@ -253,13 +227,8 @@ body::before{
   from{opacity:0;transform:translateX(-30px)}
   to{opacity:1;transform:translateX(0)}
 }
-@keyframes panelOut{
-  to{opacity:0;transform:translateX(-20px)}
-}
-
 .step-panel.going-back{animation:panelInBack .35s ease both}
 
-/* ── Títulos de paso ── */
 .panel-title{
   font-size:20px;font-weight:800;
   margin-bottom:6px;
@@ -272,11 +241,7 @@ body::before{
   margin-bottom:22px;line-height:1.5;
 }
 
-/* ── Opciones de método (tarjetas) ── */
-.method-grid{
-  display:grid;grid-template-columns:1fr;
-  gap:12px;
-}
+.method-grid{display:grid;grid-template-columns:1fr;gap:12px;}
 .method-card{
   display:flex;align-items:center;gap:16px;
   padding:16px 18px;
@@ -285,29 +250,21 @@ body::before{
   background:rgba(255,255,255,.02);
   cursor:pointer;
   transition:all .25s ease;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
 }
 .method-card::before{
   content:'';position:absolute;inset:0;
   background:linear-gradient(120deg,transparent,rgba(124,58,237,.07),transparent);
   opacity:0;transition:opacity .3s;
 }
-.method-card:hover{
-  border-color:var(--primary);
-  background:rgba(124,58,237,.06);
-  transform:translateX(4px);
-}
+.method-card:hover{border-color:var(--primary);background:rgba(124,58,237,.06);transform:translateX(4px);}
 .method-card:hover::before{opacity:1}
 .method-card.selected{
   border-color:var(--primary);
   background:rgba(124,58,237,.12);
   box-shadow:0 0 0 1px rgba(124,58,237,.3),0 4px 20px rgba(124,58,237,.15);
 }
-.method-icon{
-  font-size:28px;flex-shrink:0;
-  filter:drop-shadow(0 2px 6px rgba(6,182,212,.4));
-}
+.method-icon{font-size:28px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(6,182,212,.4));}
 .method-info{flex:1}
 .method-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
 .method-desc{font-size:12px;color:var(--muted);line-height:1.4}
@@ -316,61 +273,38 @@ body::before{
   border-radius:50%;
   border:2px solid var(--border2);
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  font-size:12px;
-  transition:all .25s;
+  flex-shrink:0;font-size:12px;transition:all .25s;
 }
-.method-card.selected .method-check{
-  background:var(--primary);border-color:var(--primary);
-  color:#fff;box-shadow:0 0 8px rgba(124,58,237,.5);
-}
+.method-card.selected .method-check{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 8px rgba(124,58,237,.5);}
 
-/* ── Bloque de datos bancarios ── */
 .bank-block{
-  margin-top:20px;
-  padding:18px;
+  margin-top:20px;padding:18px;
   border-radius:14px;
   background:rgba(124,58,237,.06);
   border:1px solid rgba(124,58,237,.25);
-  font-size:14px;line-height:2;
-  display:none;
+  font-size:14px;line-height:2;display:none;
 }
 .bank-block.show{display:block}
 .bank-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .bank-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.3px;margin-right:2px}
-.bank-val{
-  font-family:var(--mono);font-size:13px;
-  color:var(--accent);font-weight:600;
-}
-.copy{
-  cursor:pointer;font-size:13px;margin-left:6px;
-  opacity:.6;transition:all .2s;display:inline-block;
-}
+.bank-val{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600;}
+.copy{cursor:pointer;font-size:13px;margin-left:6px;opacity:.6;transition:all .2s;display:inline-block;}
 .copy:hover{opacity:1;transform:scale(1.3)}
 .copiado{font-size:11px;color:var(--success);margin-left:4px;font-weight:700}
 .bank-note{
-  margin-top:12px;
-  padding:10px 14px;
-  border-radius:10px;
-  background:rgba(6,182,212,.08);
-  border:1px solid rgba(6,182,212,.2);
+  margin-top:12px;padding:10px 14px;border-radius:10px;
+  background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);
   font-size:12px;color:var(--text);line-height:1.5;
 }
 
-/* ── Inputs ── */
 .field{margin-bottom:20px}
 .field-label{
-  display:block;
-  font-size:12.5px;font-weight:700;
-  color:var(--muted);
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  margin-bottom:8px;
+  display:block;font-size:12.5px;font-weight:700;
+  color:var(--muted);letter-spacing:.5px;
+  text-transform:uppercase;margin-bottom:8px;
 }
 .input-wrap{position:relative}
-input[type=text],
-input[type=email],
-input[type=number]{
+input[type=text],input[type=email],input[type=number]{
   width:100%;
   padding:14px 46px 14px 16px;
   border-radius:12px;
@@ -378,12 +312,10 @@ input[type=number]{
   background:rgba(10,14,39,.8);
   color:var(--text);
   font-family:var(--font);
-  font-size:15px;
-  transition:all .3s;
+  font-size:15px;transition:all .3s;
 }
 input:focus{
-  outline:none;
-  border-color:var(--primary);
+  outline:none;border-color:var(--primary);
   box-shadow:0 0 0 3px rgba(124,58,237,.12);
   background:rgba(124,58,237,.04);
 }
@@ -391,343 +323,240 @@ input::placeholder{color:var(--border2)}
 .i-turtle{
   position:absolute;right:12px;top:50%;
   transform:translateY(-50%) scale(0);
-  font-size:19px;opacity:0;
-  transition:all .3s;
-  pointer-events:auto;
-  cursor:pointer;
+  font-size:19px;opacity:0;transition:all .3s;
+  pointer-events:auto;cursor:pointer;
   filter:drop-shadow(0 0 6px rgba(124,58,237,.6));
 }
 input:focus ~ .i-turtle{
-  transform:translateY(-50%) scale(1);
-  opacity:1;
+  transform:translateY(-50%) scale(1);opacity:1;
   animation:wiggle 1.2s ease-in-out infinite;
 }
 @keyframes wiggle{
   0%,100%{transform:translateY(-50%) scale(1) rotate(-6deg)}
   50%{transform:translateY(-50%) scale(1) rotate(6deg)}
 }
-.mxn-hint{
-  margin-top:8px;font-size:13px;
-  color:var(--accent);font-weight:500;
-}
+.mxn-hint{margin-top:8px;font-size:13px;color:var(--accent);font-weight:500;}
 
-/* ── Upload de comprobante ── */
-.upload-zone{
-  border:2px dashed var(--border2);
-  border-radius:16px;
-  padding:32px 20px;
-  text-align:center;
-  cursor:pointer;
-  transition:all .3s;
-  position:relative;
-  background:rgba(255,255,255,.01);
-}
-.upload-zone:hover, .upload-zone.drag{
-  border-color:var(--primary);
-  background:rgba(124,58,237,.06);
-}
-.upload-zone input[type=file]{
-  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
-}
-.upload-icon{font-size:40px;margin-bottom:10px;display:block}
-.upload-title{font-size:15px;font-weight:700;margin-bottom:4px}
-.upload-sub{font-size:12px;color:var(--muted)}
-.upload-preview{
-  display:none;
-  margin-top:16px;
-  border-radius:12px;overflow:hidden;
-  border:1px solid var(--border2);
-  max-height:180px;
-}
-.upload-preview img{width:100%;height:180px;object-fit:contain;background:#000}
-.upload-name{
-  margin-top:10px;font-size:12px;
-  color:var(--success);font-weight:600;
-  display:none;
-}
-
-/* ── Resumen ── */
-.summary{
-  border-radius:16px;
+.checklist-wrap{
+  margin-top:24px;
+  border-radius:14px;
   border:1px solid var(--border2);
   overflow:hidden;
 }
-.summary-row{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:14px 18px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  font-size:14px;
+.checklist-title{
+  padding:12px 16px;
+  background:rgba(124,58,237,.08);
+  border-bottom:1px solid var(--border2);
+  font-size:12px;font-weight:700;
+  color:var(--primary-light);
+  letter-spacing:.4px;text-transform:uppercase;
 }
+.check-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.03);
+  cursor:pointer;
+  transition:background .2s;
+  user-select:none;
+}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:rgba(124,58,237,.05)}
+.check-item.checked{background:rgba(16,185,129,.04)}
+.check-btn{
+  width:26px;height:26px;flex-shrink:0;
+  border-radius:8px;
+  border:2px solid var(--border2);
+  background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;
+  transition:all .25s ease;
+  color:transparent;
+}
+.check-item.checked .check-btn{
+  background:var(--success);
+  border-color:var(--success);
+  color:#fff;
+  box-shadow:0 0 12px rgba(16,185,129,.4);
+  animation:checkPop .3s ease;
+}
+@keyframes checkPop{
+  0%{transform:scale(.7)}60%{transform:scale(1.2)}100%{transform:scale(1)}
+}
+.check-text{
+  flex:1;font-size:14px;font-weight:500;
+  color:var(--text);line-height:1.4;
+  transition:color .25s;
+}
+.check-item.checked .check-text{
+  color:var(--muted);
+  text-decoration:line-through;
+  text-decoration-color:rgba(16,185,129,.5);
+}
+.check-badge{
+  font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:20px;
+  background:rgba(124,58,237,.15);
+  color:var(--primary-light);
+  border:1px solid rgba(124,58,237,.2);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.check-item.checked .check-badge{
+  background:rgba(16,185,129,.15);
+  color:var(--success);
+  border-color:rgba(16,185,129,.2);
+}
+.checklist-footer{
+  padding:12px 16px;
+  background:rgba(6,182,212,.04);
+  border-top:1px solid var(--border2);
+  font-size:12px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.checklist-progress{
+  flex:1;height:4px;border-radius:2px;
+  background:var(--border2);overflow:hidden;
+}
+.checklist-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--primary),var(--success));
+  border-radius:2px;
+  transition:width .4s ease;
+}
+.checklist-count{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;}
+
+.upload-zone{
+  border:2px dashed var(--border2);
+  border-radius:16px;padding:32px 20px;
+  text-align:center;cursor:pointer;
+  transition:all .3s;position:relative;
+  background:rgba(255,255,255,.01);
+}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--primary);background:rgba(124,58,237,.06);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:40px;margin-bottom:10px;display:block}
+.upload-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--muted)}
+.upload-preview{display:none;margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border2);max-height:180px;}
+.upload-preview img{width:100%;height:180px;object-fit:contain;background:#000}
+.upload-name{margin-top:10px;font-size:12px;color:var(--success);font-weight:600;display:none;}
+
+.summary{border-radius:16px;border:1px solid var(--border2);overflow:hidden;}
+.summary-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px;}
 .summary-row:last-child{border-bottom:none}
 .sum-icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .sum-key{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
 .sum-val{font-weight:600;color:var(--text);font-family:var(--mono);font-size:13px}
-.sum-img{
-  width:100%;border-radius:10px;
-  max-height:140px;object-fit:contain;
-  background:rgba(0,0,0,.3);
-  margin-top:8px;
-}
+.sum-img{width:100%;border-radius:10px;max-height:140px;object-fit:contain;background:rgba(0,0,0,.3);margin-top:8px;}
 
-/* ── Navegación ── */
-.nav-btns{
-  display:flex;gap:12px;
-  margin-top:28px;
-}
+.nav-btns{display:flex;gap:12px;margin-top:28px;}
 .btn-back{
   flex:1;padding:15px;
-  border:1.5px solid var(--border2);
-  border-radius:12px;
-  background:transparent;
-  color:var(--muted);
-  font-family:var(--font);
-  font-size:15px;font-weight:600;
-  cursor:pointer;
-  transition:all .3s;
+  border:1.5px solid var(--border2);border-radius:12px;
+  background:transparent;color:var(--muted);
+  font-family:var(--font);font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .3s;
   display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .btn-back:hover{border-color:var(--primary);color:var(--primary-light)}
 
 .btn-next{
-  flex:2;padding:15px;
-  border:none;
-  border-radius:12px;
+  flex:2;padding:15px;border:none;border-radius:12px;
   background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;
-  font-family:var(--font);
-  font-size:16px;font-weight:800;
-  cursor:pointer;
-  transition:all .3s;
+  color:#fff;font-family:var(--font);font-size:16px;font-weight:800;
+  cursor:pointer;transition:all .3s;
   box-shadow:0 4px 20px rgba(124,58,237,.4);
   display:flex;align-items:center;justify-content:center;gap:10px;
   position:relative;overflow:hidden;
 }
-.btn-next::before{
-  content:'';
-  position:absolute;inset:0;
-  background:rgba(255,255,255,0);
-  transition:background .3s;
-}
+.btn-next::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .3s;}
 .btn-next:hover::before{background:rgba(255,255,255,.08)}
 .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.55)}
 .btn-next:active{transform:translateY(0)}
-.btn-next:disabled{
-  background:linear-gradient(135deg,#1e1e2e,#1a2535);
-  cursor:not-allowed;transform:none;
-  box-shadow:none;color:var(--muted);
-}
+.btn-next:disabled{background:linear-gradient(135deg,#1e1e2e,#1a2535);cursor:not-allowed;transform:none;box-shadow:none;color:var(--muted);}
+.btn-next.sending{background:linear-gradient(135deg,#4a2090,#0a8499);cursor:not-allowed;transform:none!important;}
+.btn-next.done{background:linear-gradient(135deg,#065f46,#0d9488);cursor:not-allowed;transform:none!important;box-shadow:0 4px 20px rgba(16,185,129,.35);}
 
-/* ── Estado enviando / bloqueado ── */
-.btn-next.sending{
-  background:linear-gradient(135deg,#4a2090,#0a8499);
-  cursor:not-allowed;transform:none!important;
-}
-.btn-next.locked{
-  background:linear-gradient(135deg,#1e1e2e,#1a2535);
-  cursor:not-allowed;transform:none!important;
-  border:1px solid rgba(248,113,113,.4);
-  color:#f87171;
-  animation:lockPulse 2s ease-in-out infinite;
-}
-@keyframes lockPulse{
-  0%,100%{box-shadow:0 0 0 2px rgba(248,113,113,.4)}
-  50%{box-shadow:0 0 0 4px rgba(248,113,113,.2),0 0 25px rgba(248,113,113,.2)}
-}
-.btn-next.done{
-  background:linear-gradient(135deg,#065f46,#0d9488);
-  cursor:not-allowed;transform:none!important;
-  box-shadow:0 4px 20px rgba(16,185,129,.35);
-}
-
-.spinner{
-  width:19px;height:19px;
-  border:3px solid rgba(255,255,255,.25);
-  border-top-color:#fff;
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-  flex-shrink:0;
-}
+.spinner{width:19px;height:19px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.cooldown-bar{height:3px;border-radius:0 0 12px 12px;background:rgba(248,113,113,.1);display:none;overflow:hidden}
-.cooldown-bar.vis{display:block}
-.cooldown-fill{height:100%;background:linear-gradient(90deg,#f87171,#ef4444);transition:width 1s linear;box-shadow:0 0 6px rgba(248,113,113,.5)}
-.cooldown-msg{
-  display:none;text-align:center;margin-top:10px;
-  padding:11px 14px;border-radius:11px;
-  background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);
-  color:#fca5a5;font-size:12.5px;font-weight:600;line-height:1.5;
-}
-.cooldown-msg.vis{display:block}
-
-/* ── Error ── */
 .error-box{
-  display:none;
-  padding:12px 16px;border-radius:11px;
-  background:rgba(248,113,113,.08);
-  border:1px solid rgba(248,113,113,.3);
+  display:none;padding:12px 16px;border-radius:11px;
+  background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);
   color:#f87171;font-size:13px;font-weight:600;
-  margin-bottom:16px;
-  text-align:center;
+  margin-bottom:16px;text-align:center;
 }
 .error-box.show{display:block}
 
-/* ── Éxito final ── */
-.success-screen{
-  display:none;text-align:center;padding:16px 0;
-}
+.success-screen{display:none;text-align:center;padding:16px 0;}
 .success-screen.show{display:block}
 .success-icon{font-size:64px;margin-bottom:16px;animation:popIn .5s ease both}
-@keyframes popIn{
-  from{transform:scale(0)}
-  80%{transform:scale(1.2)}
-  to{transform:scale(1)}
-}
+@keyframes popIn{from{transform:scale(0)}80%{transform:scale(1.2)}to{transform:scale(1)}}
 .success-title{font-size:22px;font-weight:900;color:var(--success);margin-bottom:8px}
 .success-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-.success-warn{
-  padding:14px 16px;border-radius:12px;
-  background:rgba(124,58,237,.08);border:1px solid var(--primary);
-  font-size:13px;color:var(--text);line-height:1.7;text-align:left;
-  margin-bottom:16px;
-}
+.success-warn{padding:14px 16px;border-radius:12px;background:rgba(124,58,237,.08);border:1px solid var(--primary);font-size:13px;color:var(--text);line-height:1.7;text-align:left;margin-bottom:16px;}
 .countdown-txt{font-size:13px;color:var(--muted)}
 .countdown-txt b{color:var(--accent)}
 
-/* ══════════════════════════════════════════
-   RESPONSIVE — MÓVIL
-   ══════════════════════════════════════════ */
-
-@media (max-width: 480px){
-
-  /* Card sin bordes redondeados tan grandes, menos padding */
-  .card{
-    border-radius:20px;
-    padding:24px 18px 24px;
-  }
-
-  /* Logo más pequeño */
-  .logo{
-    font-size:21px;
-    margin-bottom:20px;
-    letter-spacing:-.5px;
-  }
+@media (max-width:480px){
+  .card{border-radius:20px;padding:24px 18px 24px;}
+  .logo{font-size:21px;margin-bottom:20px;letter-spacing:-.5px;}
   .logo-turtle{font-size:23px}
-
-  /* Banner seguridad: texto más compacto */
-  .sec-banner{
-    padding:12px 13px;
-    font-size:12px;
-    gap:10px;
-    margin-bottom:20px;
-  }
+  .sec-banner{padding:12px 13px;font-size:12px;gap:10px;margin-bottom:20px;}
   .sec-banner .icon{font-size:17px}
-
-  /* ── Barra de progreso: dots más pequeños, labels abajo ── */
   .progress-wrap{margin-bottom:24px}
   .step-dot{width:32px;height:32px;font-size:13px}
   .step-dot.done::after{font-size:13px}
-  .step-label{
-    font-size:9px;
-    max-width:56px;
-    /* Ocultar label en pasos no activos para no amontonar */
-    color:transparent;
-    transition:color .3s;
-  }
+  .step-label{font-size:9px;max-width:56px;color:transparent;transition:color .3s;}
   .step-dot-wrap.active .step-label{color:var(--primary-light)}
   .step-dot-wrap.done .step-label{color:var(--success)}
   .step-line{min-width:12px;max-width:40px}
-
-  /* Títulos de panel */
   .panel-title{font-size:18px}
   .panel-sub{font-size:12px;margin-bottom:18px}
-
-  /* Tarjetas de método */
   .method-card{padding:13px 14px;gap:12px}
   .method-icon{font-size:24px}
   .method-name{font-size:14px}
   .method-desc{font-size:11px}
   .method-check{width:20px;height:20px;font-size:11px}
-
-  /* Datos bancarios: fuente mono más pequeña para que la CLABE no se corte */
   .bank-block{padding:14px;font-size:13px;line-height:1.9}
-  .bank-val{
-    font-size:12px;
-    word-break:break-all;   /* CLABE larga: rompe si no cabe */
-  }
+  .bank-val{font-size:12px;word-break:break-all;}
   .bank-label{font-size:11px}
   .bank-note{font-size:11px}
-
-  /* Inputs: tamaño de fuente 16px para evitar zoom en iOS */
-  input[type=text],
-  input[type=email],
-  input[type=number]{
-    font-size:16px;
-    padding:13px 44px 13px 14px;
-  }
+  input[type=text],input[type=email],input[type=number]{font-size:16px;padding:13px 44px 13px 14px;}
   .field-label{font-size:11.5px}
   .mxn-hint{font-size:12px}
-
-  /* Upload zone más compacta */
+  .check-text{font-size:13px}
+  .check-badge{font-size:10px;padding:2px 6px}
   .upload-zone{padding:24px 14px}
   .upload-icon{font-size:32px}
   .upload-title{font-size:14px}
   .upload-sub{font-size:11px}
-
-  /* Resumen: evitar que correos/CLABE largos rompan layout */
-  .sum-val{
-    font-size:12px;
-    word-break:break-all;
-  }
+  .sum-val{font-size:12px;word-break:break-all;}
   .sum-key{font-size:10px}
   .summary-row{padding:12px 14px;gap:10px}
-
-  /* Botones de navegación: full width en columna si es solo uno */
   .nav-btns{margin-top:22px;gap:10px}
-  .btn-back{
-    font-size:13px;
-    padding:13px 10px;
-    flex:1;
-  }
-  .btn-next{
-    font-size:14px;
-    padding:14px 10px;
-    flex:2;
-  }
-
-  /* Pantalla de éxito */
+  .btn-back{font-size:13px;padding:13px 10px;flex:1;}
+  .btn-next{font-size:14px;padding:14px 10px;flex:2;}
   .success-icon{font-size:52px}
   .success-title{font-size:19px}
   .success-sub{font-size:13px}
   .success-warn{font-size:12px;padding:12px 13px}
   .countdown-txt{font-size:12px}
-
-  /* Toast Panchita que no tape contenido */
-  .panchita{
-    bottom:12px;right:12px;left:12px;
-    max-width:100%;
-    font-size:13px;
-    padding:12px 15px;
-  }
+  .panchita{bottom:12px;right:12px;left:12px;max-width:100%;font-size:13px;padding:12px 15px;}
 }
 
-/* Tablet: solo ajustes menores */
 @media (min-width:481px) and (max-width:680px){
   .card{padding:28px 24px}
   .bank-val{font-size:12.5px;word-break:break-all}
   .sum-val{word-break:break-all}
-  input[type=text],
-  input[type=email],
-  input[type=number]{font-size:16px}
+  input[type=text],input[type=email],input[type=number]{font-size:16px}
 }
 
-/* PC: centrar bien con más aire */
 @media (min-width:681px){
   .wrapper{padding:40px 24px 60px}
   .card{padding:40px 36px 36px}
 }
 
-/* ── Panchita toast ── */
 .panchita{
   position:fixed;bottom:20px;right:20px;
   background:linear-gradient(135deg,var(--primary),var(--accent));
@@ -735,16 +564,11 @@ input:focus ~ .i-turtle{
   box-shadow:0 8px 24px rgba(124,58,237,.45);
   font-size:13.5px;font-weight:600;
   transform:translateY(130px);opacity:0;
-  transition:all .4s ease;z-index:9999;max-width:270px;
-  line-height:1.5;
+  transition:all .4s ease;z-index:9999;max-width:270px;line-height:1.5;
 }
 .panchita.show{transform:translateY(0);opacity:1}
 
-/* ── Footer ── */
-.footer{
-  margin-top:22px;font-size:11.5px;
-  color:var(--muted);letter-spacing:.3px;
-}
+.footer{margin-top:22px;font-size:11.5px;color:var(--muted);letter-spacing:.3px;}
 </style>
 </head>
 <body>
@@ -760,14 +584,12 @@ input:focus ~ .i-turtle{
 
   <div class="card">
 
-    <!-- Banner seguridad -->
     <div class="sec-banner">
       <span class="icon">🔒</span>
       <span><b>PAGO 100% SEGURO</b> — Jamás te pediremos datos de tu tarjeta.<br>
       Todo lo haces tú desde la app de tu banco.</span>
     </div>
 
-    <!-- Progreso visual -->
     <div class="progress-wrap">
       <div class="progress-steps" id="progressSteps">
 
@@ -775,21 +597,18 @@ input:focus ~ .i-turtle{
           <div class="step-dot active" id="dot0"><span class="dot-num">1</span></div>
           <div class="step-label">Método</div>
         </div>
-
         <div class="step-line" id="line0"><div class="step-line-fill"></div></div>
 
         <div class="step-dot-wrap" data-step="1">
           <div class="step-dot" id="dot1"><span class="dot-num">2</span></div>
           <div class="step-label">Tus datos</div>
         </div>
-
         <div class="step-line" id="line1"><div class="step-line-fill"></div></div>
 
         <div class="step-dot-wrap" data-step="2">
           <div class="step-dot" id="dot2"><span class="dot-num">3</span></div>
           <div class="step-label">Comprobante</div>
         </div>
-
         <div class="step-line" id="line2"><div class="step-line-fill"></div></div>
 
         <div class="step-dot-wrap" data-step="3">
@@ -800,16 +619,13 @@ input:focus ~ .i-turtle{
       </div>
     </div>
 
-    <!-- Error global -->
     <div class="error-box" id="errorBox"></div>
 
-    <!-- ═══ PANELS ═══ -->
     <div class="steps-outer" id="stepsOuter">
 
-      <!-- PASO 1: Método de pago -->
       <div class="step-panel active" id="panel0">
-        <div class="panel-title">¿Cómo pagaste?</div>
-        <div class="panel-sub">Elige el método que usaste para hacer tu pago.</div>
+        <div class="panel-title">¿Qué método de pago usaste?</div>
+        <div class="panel-sub">Elige el método con el que realizaste tu pago.</div>
 
         <div class="method-grid">
           <div class="method-card" data-method="binance" onclick="selectMethod(this)">
@@ -838,20 +654,18 @@ input:focus ~ .i-turtle{
           </div>
         </div>
 
-        <!-- Datos bancarios que aparecen al seleccionar -->
         <div class="bank-block" id="bankBlock"></div>
 
         <div class="nav-btns">
           <button class="btn-next" id="btnStep0Next" onclick="goNext()" disabled>
-            Siguiente <span>→</span>
+            Siguiente →
           </button>
         </div>
       </div>
 
-      <!-- PASO 2: Datos del usuario -->
       <div class="step-panel" id="panel1">
         <div class="panel-title">Tus datos</div>
-        <div class="panel-sub">Necesitamos tu correo para identificar tu cuenta en nuestro servidor.</div>
+        <div class="panel-sub">Ingresa tu correo y el monto que pagaste.</div>
 
         <div class="field">
           <label class="field-label">Correo registrado en el server</label>
@@ -878,16 +692,40 @@ input:focus ~ .i-turtle{
           <div class="mxn-hint" id="mxnHint">Equivalente: $0 MXN</div>
         </div>
 
+        <div class="checklist-wrap">
+          <div class="checklist-title">✅ Confirma que ya hiciste lo siguiente</div>
+          <div class="check-item" id="ci0" onclick="toggleCheck(0)">
+            <div class="check-btn" id="cb0">✓</div>
+            <div class="check-text">Ya realicé la transferencia / pago</div>
+            <div class="check-badge" id="cbadge0">Pendiente</div>
+          </div>
+          <div class="check-item" id="ci1" onclick="toggleCheck(1)">
+            <div class="check-btn" id="cb1">✓</div>
+            <div class="check-text">Ya tengo la captura o foto del comprobante lista</div>
+            <div class="check-badge" id="cbadge1">Pendiente</div>
+          </div>
+          <div class="check-item" id="ci2" onclick="toggleCheck(2)">
+            <div class="check-btn" id="cb2">✓</div>
+            <div class="check-text">El monto que ingresé arriba es correcto</div>
+            <div class="check-badge" id="cbadge2">Pendiente</div>
+          </div>
+          <div class="checklist-footer">
+            <div class="checklist-progress">
+              <div class="checklist-progress-fill" id="checkProgressFill" style="width:0%"></div>
+            </div>
+            <div class="checklist-count" id="checkCount">0 / 3</div>
+          </div>
+        </div>
+
         <div class="nav-btns">
           <button class="btn-back" onclick="goBack()">← Atrás</button>
           <button class="btn-next" onclick="goNext()">Siguiente →</button>
         </div>
       </div>
 
-      <!-- PASO 3: Subir comprobante -->
       <div class="step-panel" id="panel2">
         <div class="panel-title">Sube tu comprobante</div>
-        <div class="panel-sub">Adjunta una captura o foto de tu comprobante de pago.</div>
+        <div class="panel-sub">Adjunta la captura o foto de tu comprobante de pago.</div>
 
         <div class="upload-zone" id="uploadZone">
           <input type="file" id="fFile" accept="image/*" onchange="onFileChange(this)">
@@ -906,7 +744,6 @@ input:focus ~ .i-turtle{
         </div>
       </div>
 
-      <!-- PASO 4: Resumen + Enviar -->
       <div class="step-panel" id="panel3">
         <div class="panel-title">Revisa y envía</div>
         <div class="panel-sub">Confirma que todo esté correcto antes de enviar.</div>
@@ -923,22 +760,21 @@ input:focus ~ .i-turtle{
           </div>
         </div>
 
-        <!-- Éxito -->
         <div class="success-screen" id="successScreen">
           <div class="success-icon">✅</div>
           <div class="success-title">¡Comprobante enviado!</div>
           <div class="success-sub">Lo recibimos correctamente. En breve procesaremos tu pago.</div>
           <div class="success-warn">
             ⚠️ <b>IMPORTANTE:</b> No envíes el comprobante más de una vez.<br>
-            Los envíos duplicados pueden atorar tu solicitud <b>hasta 4 horas</b>.
+            Los envíos duplicados pueden atorar tu solicitud y puede tardar en resolverse <b>hasta 4 horas</b>.
           </div>
           <div class="countdown-txt">Redirigiendo en <b id="countNum">20</b> segundos…</div>
         </div>
       </div>
 
-    </div><!-- /steps-outer -->
+    </div>
 
-  </div><!-- /card -->
+  </div>
 
   <div class="footer">BY WSSSISTEMAS © 2026</div>
 </div>
@@ -948,18 +784,17 @@ input:focus ~ .i-turtle{
 </div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────
-const RATE         = 20;
-const MIN_USD      = 3;
-const BOT_TOKEN    = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
-const CHAT_ID      = "8346464055";
-// ── Estado ──────────────────────────────────────────────────
+const RATE      = 20;
+const MIN_USD   = 3;
+const BOT_TOKEN = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
+const CHAT_ID   = "8346464055";
+
 let currentStep    = 0;
 let selectedMethod = null;
 let isSending      = false;
 let alreadySent    = false;
+let checks         = [false, false, false];
 
-// ── Sparkles ─────────────────────────────────────────────────
 for(let i=0;i<22;i++){
   const s = document.createElement('div');
   s.className = 'sparkle';
@@ -969,7 +804,6 @@ for(let i=0;i<22;i++){
   document.body.appendChild(s);
 }
 
-// ── Tortuga flotante ─────────────────────────────────────────
 const tf = document.getElementById('turtleFloat');
 let turtleGone = false;
 tf.addEventListener('click', () => {
@@ -981,89 +815,88 @@ tf.addEventListener('click', () => {
   setTimeout(()=>tf.remove(), 2800);
 });
 
-// ── Panchita toast ───────────────────────────────────────────
 function showPanchita(){
   const p = document.getElementById('panchita');
   p.classList.add('show');
   setTimeout(()=>p.classList.remove('show'), 8000);
 }
 
-// ── Selección de método ──────────────────────────────────────
-const bankData = {
-  binance:{
-    html:`
-      <div class="bank-row">🆔 <span class="bank-label">ID BINANCE</span>
-        <span class="bank-val">1136518378</span>
-        <span class="copy" onclick="copiar(this,'1136518378')">📋</span>
-      </div>
-      <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
-        <span class="bank-val">WS SERVER MX</span>
-        <span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span>
-      </div>
-      <div class="bank-row">💱 <span class="bank-label">MONEDA</span>
-        <span class="bank-val">USDT / TETHER</span>
-      </div>`
-  },
-  transferencia:{
-    html:`
-      <div class="bank-row">🏛 <span class="bank-label">BANCO</span>
-        <span class="bank-val">Nu México</span>
-        <span class="copy" onclick="copiar(this,'Nu México')">📋</span>
-      </div>
-      <div class="bank-row">💳 <span class="bank-label">CLABE</span>
-        <span class="bank-val">638180000100055205</span>
-        <span class="copy" onclick="copiar(this,'638180000100055205')">📋</span>
-      </div>
-      <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
-        <span class="bank-val">CHRISTIAN QUIÑONEZ</span>
-        <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span>
-      </div>
-      <div class="bank-note">⏱️ El tiempo de reflejo depende de tu banco.</div>`
-  },
-  oxxo:{
-    html:`
-      <div class="bank-row">💳 <span class="bank-label">NÚMERO</span>
-        <span class="bank-val">5101 2523 9079 9774</span>
-        <span class="copy" onclick="copiar(this,'5101252390799774')">📋</span>
-      </div>
-      <div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span>
-        <span class="bank-val">1 USD = $20 MXN</span>
-      </div>
-      <div class="bank-note">⚠️ OXXO cobra ~$12–$15 de comisión. Inclúyela en tu pago.<br>🕐 Puede tardar hasta 24 h en reflejarse.</div>`
+function toggleCheck(i){
+  checks[i] = !checks[i];
+  const item   = document.getElementById('ci'+i);
+  const badge  = document.getElementById('cbadge'+i);
+  if(checks[i]){
+    item.classList.add('checked');
+    badge.textContent = '✓ Listo';
+  } else {
+    item.classList.remove('checked');
+    badge.textContent = 'Pendiente';
   }
+  const done = checks.filter(Boolean).length;
+  document.getElementById('checkProgressFill').style.width = (done/3*100)+'%';
+  document.getElementById('checkCount').textContent = done+' / 3';
+}
+
+const bankData = {
+  binance:{html:`
+    <div class="bank-row">🆔 <span class="bank-label">ID BINANCE</span>
+      <span class="bank-val">1136518378</span>
+      <span class="copy" onclick="copiar(this,'1136518378')">📋</span>
+    </div>
+    <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
+      <span class="bank-val">WS SERVER MX</span>
+      <span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span>
+    </div>
+    <div class="bank-row">💱 <span class="bank-label">MONEDA</span>
+      <span class="bank-val">USDT / TETHER</span>
+    </div>`},
+  transferencia:{html:`
+    <div class="bank-row">🏛 <span class="bank-label">BANCO</span>
+      <span class="bank-val">Nu México</span>
+      <span class="copy" onclick="copiar(this,'Nu México')">📋</span>
+    </div>
+    <div class="bank-row">💳 <span class="bank-label">CLABE</span>
+      <span class="bank-val">638180000100055205</span>
+      <span class="copy" onclick="copiar(this,'638180000100055205')">📋</span>
+    </div>
+    <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
+      <span class="bank-val">CHRISTIAN QUIÑONEZ</span>
+      <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span>
+    </div>
+    <div class="bank-note">⏱️ El tiempo de reflejo depende de tu banco.</div>`},
+  oxxo:{html:`
+    <div class="bank-row">💳 <span class="bank-label">NÚMERO</span>
+      <span class="bank-val">5101 2523 9079 9774</span>
+      <span class="copy" onclick="copiar(this,'5101252390799774')">📋</span>
+    </div>
+    <div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span>
+      <span class="bank-val">1 USD = $20 MXN</span>
+    </div>
+    <div class="bank-note">⚠️ OXXO cobra ~$12–$15 de comisión. Inclúyela en tu pago.<br>🕐 Puede tardar hasta 24 h en reflejarse.</div>`}
 };
 
 function selectMethod(card){
   document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   selectedMethod = card.dataset.method;
-
   const bb = document.getElementById('bankBlock');
   bb.innerHTML = bankData[selectedMethod].html;
   bb.classList.add('show');
-
-  // Ajustes de UI según método
   const isBinance = selectedMethod === 'binance';
-  document.getElementById('montoLabel').textContent =
-    isBinance ? 'MONTO PAGADO (USDT)' : 'MONTO PAGADO (USD)';
+  document.getElementById('montoLabel').textContent = isBinance ? 'MONTO PAGADO (USDT)' : 'MONTO PAGADO (USD)';
   document.getElementById('mxnHint').style.display = isBinance ? 'none' : 'block';
-
   document.getElementById('btnStep0Next').disabled = false;
 }
 
-// ── Conversión USD→MXN ───────────────────────────────────────
 document.getElementById('fUsd').addEventListener('input', function(){
   const v = parseFloat(this.value)||0;
-  document.getElementById('mxnHint').textContent =
-    `Equivalente: $${(v*RATE).toFixed(2)} MXN`;
+  document.getElementById('mxnHint').textContent = `Equivalente: $${(v*RATE).toFixed(2)} MXN`;
 });
 
-// ── Validaciones por paso ────────────────────────────────────
 function validateStep(n){
   const err = document.getElementById('errorBox');
   err.className = 'error-box';
   err.textContent = '';
-
   if(n === 0){
     if(!selectedMethod){ showErr('⚠️ Selecciona un método de pago'); return false; }
   }
@@ -1090,21 +923,16 @@ function showErr(msg){
   e.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// ── Navegación ───────────────────────────────────────────────
 function goNext(){
   if(!validateStep(currentStep)) return;
   clearError();
-
   if(currentStep === 2) buildSummary();
-
   const from = document.getElementById(`panel${currentStep}`);
   currentStep++;
   const to = document.getElementById(`panel${currentStep}`);
-
   from.style.display = 'none';
   to.classList.remove('going-back');
   to.classList.add('active');
-
   updateProgress();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1113,22 +941,16 @@ function goBack(){
   clearError();
   const from = document.getElementById(`panel${currentStep}`);
   from.classList.remove('active');
-  from.style.display = '';
   from.style.display = 'none';
   currentStep--;
   const to = document.getElementById(`panel${currentStep}`);
   to.classList.add('going-back');
-  to.style.display = '';
   to.classList.add('active');
-  from.style.display = '';
-
-  // reset de display
   for(let i=0;i<=3;i++){
     const p = document.getElementById(`panel${i}`);
     if(i === currentStep){ p.classList.add('active'); p.style.display=''; }
     else { p.classList.remove('active'); }
   }
-
   updateProgress();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1151,21 +973,17 @@ function updateProgress(){
       line.classList.toggle('filled', i < currentStep);
     }
   }
-  // Mostrar campo Binance en paso 2
   document.getElementById('fieldBinanceUser').style.display =
     selectedMethod === 'binance' ? 'block' : 'none';
 }
 
-// ── Resumen ──────────────────────────────────────────────────
 function buildSummary(){
   const email   = document.getElementById('fEmail').value;
   const usd     = document.getElementById('fUsd').value;
   const binUser = document.getElementById('fBinanceUser').value;
   const file    = document.getElementById('fFile').files[0];
-
   const metodoNames = {binance:'Binance (USDT)',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
   const mxnEq = selectedMethod!=='binance' ? `&nbsp;<span style="color:var(--muted);font-size:11px">(≈ $${(parseFloat(usd)*RATE).toFixed(2)} MXN)</span>` : '';
-
   let rows = `
     <div class="summary-row">
       <span class="sum-icon">💳</span>
@@ -1179,14 +997,12 @@ function buildSummary(){
       <span class="sum-icon">💰</span>
       <div><div class="sum-key">Monto</div><div class="sum-val">${usd} ${selectedMethod==='binance'?'USDT':'USD'} ${mxnEq}</div></div>
     </div>`;
-
   if(selectedMethod==='binance'){
     rows += `<div class="summary-row">
       <span class="sum-icon">👤</span>
       <div><div class="sum-key">Usuario Binance</div><div class="sum-val">${binUser}</div></div>
     </div>`;
   }
-
   if(file){
     const url = URL.createObjectURL(file);
     rows += `<div class="summary-row">
@@ -1197,31 +1013,25 @@ function buildSummary(){
       </div>
     </div>`;
   }
-
   document.getElementById('summaryBox').innerHTML = rows;
 }
 
-// ── Upload ───────────────────────────────────────────────────
 function onFileChange(input){
   const file = input.files[0];
   if(!file) return;
-
   const preview = document.getElementById('uploadPreview');
   const img     = document.getElementById('previewImg');
   const name    = document.getElementById('uploadName');
   const btn     = document.getElementById('btnStep2Next');
-
   const url = URL.createObjectURL(file);
   img.src = url;
   preview.style.display = 'block';
   name.textContent = '✓ ' + file.name;
   name.style.display = 'block';
   btn.disabled = false;
-
   document.getElementById('uploadZone').style.borderColor = 'var(--success)';
 }
 
-// ── Drag & drop zona ─────────────────────────────────────────
 const uz = document.getElementById('uploadZone');
 uz.addEventListener('dragover', e=>{ e.preventDefault(); uz.classList.add('drag'); });
 uz.addEventListener('dragleave', ()=>uz.classList.remove('drag'));
@@ -1234,52 +1044,39 @@ uz.addEventListener('drop', e=>{
   }
 });
 
-// ── Envío ────────────────────────────────────────────────────
 async function sendForm(){
   if(isSending || alreadySent) return;
-
   const btnSend = document.getElementById('btnSend');
   const sendIcon= document.getElementById('sendIcon');
   const sendText= document.getElementById('sendText');
-
   isSending = true;
   btnSend.disabled = true;
   btnSend.className = 'btn-next sending';
   sendIcon.innerHTML = '<div class="spinner"></div>';
   sendText.textContent = 'Enviando…';
-
   const email   = document.getElementById('fEmail').value;
   const usd     = document.getElementById('fUsd').value;
   const binUser = document.getElementById('fBinanceUser').value;
   const file    = document.getElementById('fFile').files[0];
   const metNom  = {binance:'Binance',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
-
   let texto = `🧾 NUEVO COMPROBANTE\n\n📧 Email: ${email}\n💳 Método: ${metNom[selectedMethod]}\n`;
   if(selectedMethod==='binance'){
     texto += `💰 Monto: ${usd} USDT\n👤 Usuario Binance: ${binUser}`;
   } else {
     texto += `💰 Monto: $${usd} USD\n💵 Monto MXN: $${(parseFloat(usd)*RATE).toFixed(2)}`;
   }
-
-  // Intentar enviar, pero mostrar éxito siempre — el usuario no debe ver errores técnicos
   try {
     const fd = new FormData();
     fd.append('chat_id', CHAT_ID);
     fd.append('caption', texto);
     fd.append('photo', file);
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,{method:'POST',body:fd});
-  } catch(e) {
-    // Error silencioso — el flujo de éxito corre igual
-  }
-
-  // Siempre mostrar éxito y bloquear botón
+  } catch(e) {}
   alreadySent = true;
   btnSend.disabled = true;
   btnSend.className = 'btn-next done';
   sendIcon.textContent = '✅';
   sendText.textContent = 'Enviado';
-
-  // Marcar paso 4 como completado (verde) en la barra de progreso
   const wrap3 = document.querySelector('.step-dot-wrap[data-step="3"]');
   const dot3  = document.getElementById('dot3');
   wrap3.classList.remove('active');
@@ -1287,17 +1084,13 @@ async function sendForm(){
   dot3.classList.remove('active');
   dot3.classList.add('done');
   document.getElementById('line2').classList.add('filled');
-
   document.getElementById('summaryBox').style.display = 'none';
   document.getElementById('successScreen').classList.add('show');
   document.getElementById('btnBackStep3').style.display = 'none';
-
   let secs = 20;
   const c = document.getElementById('countNum');
   const t = setInterval(()=>{ secs--; c.textContent=secs; if(secs<=0){ clearInterval(t); window.location.href='https://wsservermx.com'; } }, 1000);
 }
-
-
 
 function copiar(el, texto){
   navigator.clipboard.writeText(texto);
@@ -1306,7 +1099,6 @@ function copiar(el, texto){
   el.after(s); setTimeout(()=>s.remove(), 1500);
 }
 
-// ── Init ─────────────────────────────────────────────────────
 updateProgress();
 </script>
 </body>
