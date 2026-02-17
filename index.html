@@ -594,6 +594,139 @@ input:focus ~ .i-turtle{
 .countdown-txt{font-size:13px;color:var(--muted)}
 .countdown-txt b{color:var(--accent)}
 
+/* ══════════════════════════════════════════
+   RESPONSIVE — MÓVIL
+   ══════════════════════════════════════════ */
+
+@media (max-width: 480px){
+
+  /* Card sin bordes redondeados tan grandes, menos padding */
+  .card{
+    border-radius:20px;
+    padding:24px 18px 24px;
+  }
+
+  /* Logo más pequeño */
+  .logo{
+    font-size:21px;
+    margin-bottom:20px;
+    letter-spacing:-.5px;
+  }
+  .logo-turtle{font-size:23px}
+
+  /* Banner seguridad: texto más compacto */
+  .sec-banner{
+    padding:12px 13px;
+    font-size:12px;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .sec-banner .icon{font-size:17px}
+
+  /* ── Barra de progreso: dots más pequeños, labels abajo ── */
+  .progress-wrap{margin-bottom:24px}
+  .step-dot{width:32px;height:32px;font-size:13px}
+  .step-dot.done::after{font-size:13px}
+  .step-label{
+    font-size:9px;
+    max-width:56px;
+    /* Ocultar label en pasos no activos para no amontonar */
+    color:transparent;
+    transition:color .3s;
+  }
+  .step-dot-wrap.active .step-label{color:var(--primary-light)}
+  .step-dot-wrap.done .step-label{color:var(--success)}
+  .step-line{min-width:12px;max-width:40px}
+
+  /* Títulos de panel */
+  .panel-title{font-size:18px}
+  .panel-sub{font-size:12px;margin-bottom:18px}
+
+  /* Tarjetas de método */
+  .method-card{padding:13px 14px;gap:12px}
+  .method-icon{font-size:24px}
+  .method-name{font-size:14px}
+  .method-desc{font-size:11px}
+  .method-check{width:20px;height:20px;font-size:11px}
+
+  /* Datos bancarios: fuente mono más pequeña para que la CLABE no se corte */
+  .bank-block{padding:14px;font-size:13px;line-height:1.9}
+  .bank-val{
+    font-size:12px;
+    word-break:break-all;   /* CLABE larga: rompe si no cabe */
+  }
+  .bank-label{font-size:11px}
+  .bank-note{font-size:11px}
+
+  /* Inputs: tamaño de fuente 16px para evitar zoom en iOS */
+  input[type=text],
+  input[type=email],
+  input[type=number]{
+    font-size:16px;
+    padding:13px 44px 13px 14px;
+  }
+  .field-label{font-size:11.5px}
+  .mxn-hint{font-size:12px}
+
+  /* Upload zone más compacta */
+  .upload-zone{padding:24px 14px}
+  .upload-icon{font-size:32px}
+  .upload-title{font-size:14px}
+  .upload-sub{font-size:11px}
+
+  /* Resumen: evitar que correos/CLABE largos rompan layout */
+  .sum-val{
+    font-size:12px;
+    word-break:break-all;
+  }
+  .sum-key{font-size:10px}
+  .summary-row{padding:12px 14px;gap:10px}
+
+  /* Botones de navegación: full width en columna si es solo uno */
+  .nav-btns{margin-top:22px;gap:10px}
+  .btn-back{
+    font-size:13px;
+    padding:13px 10px;
+    flex:1;
+  }
+  .btn-next{
+    font-size:14px;
+    padding:14px 10px;
+    flex:2;
+  }
+
+  /* Pantalla de éxito */
+  .success-icon{font-size:52px}
+  .success-title{font-size:19px}
+  .success-sub{font-size:13px}
+  .success-warn{font-size:12px;padding:12px 13px}
+  .countdown-txt{font-size:12px}
+
+  /* Toast Panchita que no tape contenido */
+  .panchita{
+    bottom:12px;right:12px;left:12px;
+    max-width:100%;
+    font-size:13px;
+    padding:12px 15px;
+  }
+}
+
+/* Tablet: solo ajustes menores */
+@media (min-width:481px) and (max-width:680px){
+  .card{padding:28px 24px}
+  .bank-val{font-size:12.5px;word-break:break-all}
+  .sum-val{word-break:break-all}
+  input[type=text],
+  input[type=email],
+  input[type=number]{font-size:16px}
+}
+
+/* PC: centrar bien con más aire */
+@media (min-width:681px){
+  .wrapper{padding:40px 24px 60px}
+  .card{padding:40px 36px 36px}
+}
+
 /* ── Panchita toast ── */
 .panchita{
   position:fixed;bottom:20px;right:20px;
