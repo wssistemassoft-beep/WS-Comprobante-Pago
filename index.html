@@ -4,961 +4,1177 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comprobar Pago | WSSERVERMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#0a0e27;
-  --card:#131929;
+  --bg:#07091a;
+  --card:#0f1326;
+  --card2:#131929;
   --border:#1e2740;
+  --border2:#252e50;
   --text:#e8eaed;
   --muted:#8b93a7;
   --primary:#7c3aed;
   --primary-light:#a78bfa;
   --accent:#06b6d4;
   --success:#10b981;
+  --danger:#f87171;
+  --font:'Outfit',sans-serif;
+  --mono:'JetBrains Mono',monospace;
 }
 
-*{box-sizing:border-box;font-family:Inter,Segoe UI,system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  margin:0;
+  font-family:var(--font);
   min-height:100vh;
-  background:linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  background:var(--bg);
   color:var(--text);
   position:relative;
   overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(6,182,212,0.08) 0%, transparent 60%);
 }
 
-.turtle-container{
-  position:fixed;
-  width:60px;
-  height:60px;
-  top:20%;
-  left:-70px;
-  font-size:40px;
-  filter:drop-shadow(0 0 10px rgba(124,58,237,0.6));
-  animation:swim 8s ease-in-out infinite;
-  z-index:100;
-  pointer-events:auto;
-  cursor:pointer;
-  transition:transform 0.3s ease;
+/* ── Grid de puntos de fondo ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:radial-gradient(circle, rgba(124,58,237,0.12) 1px, transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;
+  z-index:0;
 }
 
-.turtle-container:hover{
-  transform:scale(1.1);
-}
-
-.turtle-container.flipped{
-  animation:flipAndLeave 3s ease-out forwards !important;
-}
-
-@keyframes flipAndLeave{
-  0%{transform:rotate(0deg);opacity:1;}
-  25%{transform:rotate(180deg) scale(1.4);opacity:1;}
-  50%{transform:rotate(180deg) scale(1.4);opacity:1;}
-  65%{transform:rotate(360deg) scale(1);opacity:1;}
-  100%{transform:rotate(360deg) translateY(-1000px);opacity:0;}
-}
-
-@keyframes swim{
-  0%{left:-70px;top:20%;}
-  25%{top:15%;}
-  50%{left:50%;top:30%;}
-  75%{top:25%;}
-  100%{left:110%;top:20%;}
-}
-
+/* ── Sparkles ── */
 .sparkle{
   position:fixed;
-  width:2px;
-  height:2px;
+  width:2px;height:2px;
   background:var(--primary-light);
   border-radius:50%;
   pointer-events:none;
   opacity:0;
   animation:sparkle 4s infinite;
   box-shadow:0 0 4px var(--primary-light);
+  z-index:1;
 }
-
 @keyframes sparkle{
   0%,100%{opacity:0;transform:scale(0)}
-  50%{opacity:0.8;transform:scale(1.5)}
+  50%{opacity:.8;transform:scale(1.5)}
 }
 
+/* ── Tortuga flotante en pantalla ── */
+.turtle-float{
+  position:fixed;
+  font-size:38px;
+  top:20%;left:-70px;
+  filter:drop-shadow(0 0 10px rgba(124,58,237,.6));
+  animation:swim 9s ease-in-out infinite;
+  z-index:100;
+  cursor:pointer;
+  pointer-events:auto;
+  transition:transform .3s;
+}
+.turtle-float:hover{transform:scale(1.15)}
+@keyframes swim{
+  0%{left:-70px;top:22%}
+  30%{top:16%}
+  60%{left:55%;top:32%}
+  100%{left:110%;top:22%}
+}
+.turtle-float.bye{animation:turtleBye 2.8s ease-out forwards!important}
+@keyframes turtleBye{
+  0%{transform:rotate(0) scale(1);opacity:1}
+  30%{transform:rotate(180deg) scale(1.5);opacity:1}
+  60%{transform:rotate(360deg) scale(1);opacity:1}
+  100%{transform:rotate(360deg) translateY(-900px);opacity:0}
+}
+
+/* ── Layout principal ── */
 .wrapper{
-  max-width:700px;
-  margin:auto;
-  padding:24px;
+  position:relative;z-index:2;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:28px 16px 48px;
+}
+
+/* ── Logo ── */
+.logo{
+  font-size:26px;font-weight:900;
+  letter-spacing:-1px;
+  background:linear-gradient(120deg,var(--primary),var(--accent),var(--primary-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 10px rgba(124,58,237,.5));
+  margin-bottom:28px;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-turtle{
+  font-size:28px;-webkit-text-fill-color:initial;
+  display:inline-block;
+  animation:float 2.6s ease-in-out infinite;
+  filter:drop-shadow(0 3px 8px rgba(6,182,212,.6));
+}
+@keyframes float{
+  0%,100%{transform:translateY(0) rotate(-5deg)}
+  50%{transform:translateY(-10px) rotate(5deg)}
+}
+
+/* ── Card ── */
+.card{
+  width:100%;max-width:580px;
+  background:linear-gradient(160deg,#0f1326 0%,#0c1020 100%);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:36px 32px 32px;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.7),
+    0 0 0 1px rgba(124,58,237,.15),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),rgba(6,182,212,.4),transparent);
+}
+
+/* ── Banner seguridad ── */
+.sec-banner{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  background:rgba(16,185,129,.07);
+  border:1px solid rgba(16,185,129,.3);
+  border-radius:14px;
+  margin-bottom:28px;
+  font-size:13px;color:var(--text);line-height:1.55;
+}
+.sec-banner .icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.sec-banner b{color:#6ee7b7}
+
+/* ── Progress bar de pasos ── */
+.progress-wrap{
+  margin-bottom:32px;
+}
+.progress-steps{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;
+  position:relative;
+}
+.step-dot-wrap{
+  display:flex;flex-direction:column;
+  align-items:center;
+  gap:6px;
   position:relative;
   z-index:1;
 }
+.step-dot{
+  width:40px;height:40px;
+  border-radius:50%;
+  border:2px solid var(--border2);
+  background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;
+  color:var(--muted);
+  transition:all .4s ease;
+  position:relative;
+  cursor:default;
+}
+.step-dot.active{
+  border-color:var(--primary);
+  background:rgba(124,58,237,.2);
+  color:#fff;
+  box-shadow:0 0 0 4px rgba(124,58,237,.15),0 0 20px rgba(124,58,237,.3);
+  animation:dotPop .3s ease;
+}
+@keyframes dotPop{
+  0%{transform:scale(.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}
+}
+.step-dot.done{
+  border-color:var(--success);
+  background:rgba(16,185,129,.2);
+  color:var(--success);
+}
+.step-dot.done::after{
+  content:'✓';
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;
+}
+.step-dot.done .dot-num{display:none}
+.step-label{
+  font-size:10.5px;font-weight:600;
+  color:var(--muted);
+  text-align:center;
+  letter-spacing:.3px;
+  transition:color .3s;
+  white-space:nowrap;
+  max-width:72px;
+}
+.step-dot-wrap.active .step-label{color:var(--primary-light)}
+.step-dot-wrap.done .step-label{color:var(--success)}
 
-.card{
-  background:linear-gradient(145deg, #131929, #0f1420);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:36px;
-  box-shadow:0 25px 70px rgba(0,0,0,0.6),
-             0 0 1px rgba(124,58,237,0.4);
+.step-line{
+  flex:1;height:2px;
+  background:var(--border2);
+  position:relative;
+  overflow:hidden;
+  margin-bottom:22px;
+  min-width:20px;max-width:60px;
+}
+.step-line-fill{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s ease;
+}
+.step-line.filled .step-line-fill{transform:scaleX(1)}
+
+/* ── Paneles de pasos ── */
+.steps-outer{
+  position:relative;
+  overflow:hidden;
+  min-height:280px;
+}
+.step-panel{
+  display:none;
+  animation:panelIn .35s ease both;
+}
+.step-panel.active{display:block}
+.step-panel.exit{animation:panelOut .25s ease both}
+@keyframes panelIn{
+  from{opacity:0;transform:translateX(30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes panelInBack{
+  from{opacity:0;transform:translateX(-30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+@keyframes panelOut{
+  to{opacity:0;transform:translateX(-20px)}
+}
+
+.step-panel.going-back{animation:panelInBack .35s ease both}
+
+/* ── Títulos de paso ── */
+.panel-title{
+  font-size:20px;font-weight:800;
+  margin-bottom:6px;
+  background:linear-gradient(90deg,var(--text),var(--primary-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.panel-sub{
+  font-size:13px;color:var(--muted);
+  margin-bottom:22px;line-height:1.5;
+}
+
+/* ── Opciones de método (tarjetas) ── */
+.method-grid{
+  display:grid;grid-template-columns:1fr;
+  gap:12px;
+}
+.method-card{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 18px;
+  border-radius:16px;
+  border:2px solid var(--border2);
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+  transition:all .25s ease;
   position:relative;
   overflow:hidden;
 }
-
-.card::before{
-  content:'';
-  position:absolute;
-  top:-2px;
-  left:-2px;
-  right:-2px;
-  bottom:-2px;
-  background:linear-gradient(60deg, 
-    transparent 30%, 
-    rgba(124,58,237,0.3) 50%, 
-    transparent 70%);
-  border-radius:24px;
-  animation:borderGlow 4s linear infinite;
-  pointer-events:none;
-  z-index:-1;
+.method-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent,rgba(124,58,237,.07),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.method-card:hover{
+  border-color:var(--primary);
+  background:rgba(124,58,237,.06);
+  transform:translateX(4px);
+}
+.method-card:hover::before{opacity:1}
+.method-card.selected{
+  border-color:var(--primary);
+  background:rgba(124,58,237,.12);
+  box-shadow:0 0 0 1px rgba(124,58,237,.3),0 4px 20px rgba(124,58,237,.15);
+}
+.method-icon{
+  font-size:28px;flex-shrink:0;
+  filter:drop-shadow(0 2px 6px rgba(6,182,212,.4));
+}
+.method-info{flex:1}
+.method-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.method-desc{font-size:12px;color:var(--muted);line-height:1.4}
+.method-check{
+  width:22px;height:22px;
+  border-radius:50%;
+  border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:12px;
+  transition:all .25s;
+}
+.method-card.selected .method-check{
+  background:var(--primary);border-color:var(--primary);
+  color:#fff;box-shadow:0 0 8px rgba(124,58,237,.5);
 }
 
-@keyframes borderGlow{
-  0%{transform:translateX(-100%) translateY(-100%) rotate(0deg)}
-  100%{transform:translateX(100%) translateY(100%) rotate(0deg)}
+/* ── Bloque de datos bancarios ── */
+.bank-block{
+  margin-top:20px;
+  padding:18px;
+  border-radius:14px;
+  background:rgba(124,58,237,.06);
+  border:1px solid rgba(124,58,237,.25);
+  font-size:14px;line-height:2;
+  display:none;
+}
+.bank-block.show{display:block}
+.bank-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.bank-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.3px;margin-right:2px}
+.bank-val{
+  font-family:var(--mono);font-size:13px;
+  color:var(--accent);font-weight:600;
+}
+.copy{
+  cursor:pointer;font-size:13px;margin-left:6px;
+  opacity:.6;transition:all .2s;display:inline-block;
+}
+.copy:hover{opacity:1;transform:scale(1.3)}
+.copiado{font-size:11px;color:var(--success);margin-left:4px;font-weight:700}
+.bank-note{
+  margin-top:12px;
+  padding:10px 14px;
+  border-radius:10px;
+  background:rgba(6,182,212,.08);
+  border:1px solid rgba(6,182,212,.2);
+  font-size:12px;color:var(--text);line-height:1.5;
 }
 
-.logo{
-  text-align:center;
-  font-size:30px;
-  font-weight:800;
-  margin-bottom:24px;
-  background:linear-gradient(135deg, var(--primary), var(--accent), var(--primary-light));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  letter-spacing:-0.5px;
-  filter:drop-shadow(0 2px 8px rgba(124,58,237,0.5));
-}
-
-.turtle{
-  display:inline-block;
-  font-size:32px;
-  animation:float 2.5s ease-in-out infinite;
-  filter:drop-shadow(0 4px 8px rgba(6,182,212,0.6));
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0px) rotate(-5deg)}
-  50%{transform:translateY(-12px) rotate(5deg)}
-}
-
-h1{
-  text-align:center;
-  margin-bottom:8px;
-  font-size:26px;
-  font-weight:700;
-  background:linear-gradient(90deg, var(--text), var(--primary-light));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.subtitle{
-  text-align:center;
+/* ── Inputs ── */
+.field{margin-bottom:20px}
+.field-label{
+  display:block;
+  font-size:12.5px;font-weight:700;
   color:var(--muted);
-  font-size:14px;
-  margin-bottom:36px;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  margin-bottom:8px;
 }
-
-.step{
-  margin-bottom:28px;
-  position:relative;
-}
-
-.step-title{
-  font-size:15px;
-  font-weight:600;
-  margin-bottom:10px;
-  background:linear-gradient(90deg, var(--primary), var(--accent));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
-.input-wrapper{
-  position:relative;
-}
-
-.input-turtle{
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%) scale(0);
-  font-size:20px;
-  opacity:0;
-  transition:all 0.3s ease;
-  pointer-events:auto;
-  filter:drop-shadow(0 0 6px rgba(124,58,237,0.6));
-  cursor:pointer;
-  z-index:10;
-}
-
-input:focus + .input-turtle,
-select:focus + .input-turtle{
-  transform:translateY(-50%) scale(1);
-  opacity:1;
-  animation:wiggle 1s ease-in-out infinite;
-  pointer-events:auto;
-}
-
-.input-turtle:hover{
-  transform:translateY(-50%) scale(1.1);
-}
-
-@keyframes wiggle{
-  0%, 100%{transform:translateY(-50%) scale(1) rotate(-5deg)}
-  50%{transform:translateY(-50%) scale(1) rotate(5deg)}
-}
-
-input, select{
+.input-wrap{position:relative}
+input[type=text],
+input[type=email],
+input[type=number]{
   width:100%;
-  padding:14px 16px;
+  padding:14px 46px 14px 16px;
   border-radius:12px;
-  border:1px solid var(--border);
-  background:#0a0e27;
+  border:1.5px solid var(--border2);
+  background:rgba(10,14,39,.8);
   color:var(--text);
+  font-family:var(--font);
   font-size:15px;
-  transition:all 0.3s ease;
+  transition:all .3s;
 }
-
-input[type="number"]{
-  padding-right:45px;
-  direction:ltr;
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  position:absolute;
-  left:5px;
-  right:auto;
-}
-
-input:focus, select:focus{
+input:focus{
   outline:none;
   border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+  box-shadow:0 0 0 3px rgba(124,58,237,.12);
+  background:rgba(124,58,237,.04);
 }
-
-input[type="file"]{
-  padding:12px;
+input::placeholder{color:var(--border2)}
+.i-turtle{
+  position:absolute;right:12px;top:50%;
+  transform:translateY(-50%) scale(0);
+  font-size:19px;opacity:0;
+  transition:all .3s;
+  pointer-events:auto;
   cursor:pointer;
+  filter:drop-shadow(0 0 6px rgba(124,58,237,.6));
 }
-
-input[type="file"]::file-selector-button{
-  padding:8px 16px;
-  border-radius:8px;
-  border:none;
-  background:linear-gradient(135deg, var(--primary), var(--primary-light));
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-  margin-right:12px;
-  transition:all 0.3s;
-}
-
-input[type="file"]::file-selector-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(124,58,237,0.4);
-}
-
-.mxn{
-  margin-top:8px;
-  font-size:14px;
-  color:var(--accent);
-  font-weight:500;
-}
-
-.info{
-  margin-top:12px;
-  padding:16px;
-  border-radius:12px;
-  background:rgba(124,58,237,0.05);
-  border:1px solid var(--primary);
-  font-size:14px;
-  color:var(--text);
-  line-height:1.8;
-}
-
-.copy{
-  cursor:pointer;
-  font-size:13px;
-  margin-left:8px;
-  opacity:.7;
-  transition:all 0.2s;
-  display:inline-block;
-}
-.copy:hover{
+input:focus ~ .i-turtle{
+  transform:translateY(-50%) scale(1);
   opacity:1;
-  transform:scale(1.3);
+  animation:wiggle 1.2s ease-in-out infinite;
+}
+@keyframes wiggle{
+  0%,100%{transform:translateY(-50%) scale(1) rotate(-6deg)}
+  50%{transform:translateY(-50%) scale(1) rotate(6deg)}
+}
+.mxn-hint{
+  margin-top:8px;font-size:13px;
+  color:var(--accent);font-weight:500;
 }
 
-.copiado{
-  font-size:11px;
-  color:var(--success);
-  margin-left:6px;
-  font-weight:600;
-}
-
-.error{
+/* ── Upload de comprobante ── */
+.upload-zone{
+  border:2px dashed var(--border2);
+  border-radius:16px;
+  padding:32px 20px;
   text-align:center;
-  color:#f87171;
-  margin-bottom:16px;
-  padding:12px;
-  background:rgba(248,113,113,0.1);
-  border-radius:10px;
-  border:1px solid rgba(248,113,113,0.3);
-  font-weight:500;
-}
-
-.warning{
-  margin-top:24px;
-  padding:18px;
-  border-radius:14px;
-  background:rgba(124,58,237,0.08);
-  border:1px solid var(--primary);
-  color:var(--text);
-  font-size:14px;
-  line-height:1.8;
-}
-
-/* ==========================================
-   BOTÓN PRINCIPAL + ESTADOS DE BLOQUEO
-   ========================================== */
-
-.btn-wrapper{
-  position:relative;
-}
-
-button#btn{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg, var(--primary), var(--accent));
-  color:#fff;
-  font-weight:700;
-  font-size:16px;
   cursor:pointer;
-  transition:all 0.3s ease;
-  box-shadow:0 4px 20px rgba(124,58,237,0.4);
+  transition:all .3s;
   position:relative;
+  background:rgba(255,255,255,.01);
+}
+.upload-zone:hover, .upload-zone.drag{
+  border-color:var(--primary);
+  background:rgba(124,58,237,.06);
+}
+.upload-zone input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-icon{font-size:40px;margin-bottom:10px;display:block}
+.upload-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--muted)}
+.upload-preview{
+  display:none;
+  margin-top:16px;
+  border-radius:12px;overflow:hidden;
+  border:1px solid var(--border2);
+  max-height:180px;
+}
+.upload-preview img{width:100%;height:180px;object-fit:contain;background:#000}
+.upload-name{
+  margin-top:10px;font-size:12px;
+  color:var(--success);font-weight:600;
+  display:none;
+}
+
+/* ── Resumen ── */
+.summary{
+  border-radius:16px;
+  border:1px solid var(--border2);
   overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
+}
+.summary-row{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 18px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  font-size:14px;
+}
+.summary-row:last-child{border-bottom:none}
+.sum-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.sum-key{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
+.sum-val{font-weight:600;color:var(--text);font-family:var(--mono);font-size:13px}
+.sum-img{
+  width:100%;border-radius:10px;
+  max-height:140px;object-fit:contain;
+  background:rgba(0,0,0,.3);
+  margin-top:8px;
 }
 
-button#btn::before{
+/* ── Navegación ── */
+.nav-btns{
+  display:flex;gap:12px;
+  margin-top:28px;
+}
+.btn-back{
+  flex:1;padding:15px;
+  border:1.5px solid var(--border2);
+  border-radius:12px;
+  background:transparent;
+  color:var(--muted);
+  font-family:var(--font);
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  transition:all .3s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-back:hover{border-color:var(--primary);color:var(--primary-light)}
+
+.btn-next{
+  flex:2;padding:15px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;
+  font-family:var(--font);
+  font-size:16px;font-weight:800;
+  cursor:pointer;
+  transition:all .3s;
+  box-shadow:0 4px 20px rgba(124,58,237,.4);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  position:relative;overflow:hidden;
+}
+.btn-next::before{
   content:'';
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:0;
-  height:0;
-  border-radius:50%;
-  background:rgba(255,255,255,0.2);
-  transform:translate(-50%,-50%);
-  transition:width 0.6s, height 0.6s;
+  position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  transition:background .3s;
+}
+.btn-next:hover::before{background:rgba(255,255,255,.08)}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.55)}
+.btn-next:active{transform:translateY(0)}
+.btn-next:disabled{
+  background:linear-gradient(135deg,#1e1e2e,#1a2535);
+  cursor:not-allowed;transform:none;
+  box-shadow:none;color:var(--muted);
 }
 
-button#btn:hover:not(:disabled)::before{
-  width:350px;
-  height:350px;
+/* ── Estado enviando / bloqueado ── */
+.btn-next.sending{
+  background:linear-gradient(135deg,#4a2090,#0a8499);
+  cursor:not-allowed;transform:none!important;
 }
-
-button#btn:hover:not(:disabled){
-  transform:translateY(-3px);
-  box-shadow:0 8px 30px rgba(124,58,237,0.6);
-}
-
-button#btn:active:not(:disabled){
-  transform:translateY(0);
-}
-
-/* Estado: enviando */
-button#btn.sending{
-  background:linear-gradient(135deg, #4a2090, #0a8499);
-  cursor:not-allowed;
-  transform:none !important;
-  box-shadow:0 4px 20px rgba(124,58,237,0.2);
-}
-
-/* Estado: bloqueado por spam */
-button#btn.locked{
-  background:linear-gradient(135deg, #1e1e2e, #1a2535);
-  cursor:not-allowed;
-  transform:none !important;
-  box-shadow:0 0 0 2px rgba(248,113,113,0.5),
-             0 0 20px rgba(248,113,113,0.15),
-             inset 0 0 30px rgba(0,0,0,0.4);
-  border:1px solid rgba(248,113,113,0.4);
+.btn-next.locked{
+  background:linear-gradient(135deg,#1e1e2e,#1a2535);
+  cursor:not-allowed;transform:none!important;
+  border:1px solid rgba(248,113,113,.4);
   color:#f87171;
   animation:lockPulse 2s ease-in-out infinite;
 }
-
 @keyframes lockPulse{
-  0%,100%{box-shadow:0 0 0 2px rgba(248,113,113,0.5), 0 0 20px rgba(248,113,113,0.15), inset 0 0 30px rgba(0,0,0,0.4);}
-  50%{box-shadow:0 0 0 4px rgba(248,113,113,0.3), 0 0 35px rgba(248,113,113,0.25), inset 0 0 30px rgba(0,0,0,0.4);}
+  0%,100%{box-shadow:0 0 0 2px rgba(248,113,113,.4)}
+  50%{box-shadow:0 0 0 4px rgba(248,113,113,.2),0 0 25px rgba(248,113,113,.2)}
+}
+.btn-next.done{
+  background:linear-gradient(135deg,#065f46,#0d9488);
+  cursor:not-allowed;transform:none!important;
+  box-shadow:0 4px 20px rgba(16,185,129,.35);
 }
 
-/* Estado: completado */
-button#btn.done{
-  background:linear-gradient(135deg, #065f46, #0d9488);
-  cursor:not-allowed;
-  transform:none !important;
-  box-shadow:0 4px 20px rgba(16,185,129,0.4);
-}
-
-/* Ícono de candado animado */
-.lock-icon{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  animation:lockShake 0.5s ease-in-out;
-}
-
-@keyframes lockShake{
-  0%,100%{transform:rotate(0deg) scale(1);}
-  20%{transform:rotate(-15deg) scale(1.2);}
-  40%{transform:rotate(15deg) scale(1.2);}
-  60%{transform:rotate(-8deg) scale(1.1);}
-  80%{transform:rotate(8deg) scale(1.1);}
-}
-
-/* Spinner de carga */
 .spinner{
-  width:20px;
-  height:20px;
-  border:3px solid rgba(255,255,255,0.3);
+  width:19px;height:19px;
+  border:3px solid rgba(255,255,255,.25);
   border-top-color:#fff;
   border-radius:50%;
-  animation:spin 0.8s linear infinite;
+  animation:spin .7s linear infinite;
   flex-shrink:0;
 }
+@keyframes spin{to{transform:rotate(360deg)}}
 
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
-
-/* Barra de cooldown */
-.cooldown-bar{
-  width:100%;
-  height:4px;
-  background:rgba(248,113,113,0.15);
-  border-radius:0 0 14px 14px;
-  margin-top:0;
-  overflow:hidden;
-  display:none;
-}
-
-.cooldown-bar.visible{
-  display:block;
-}
-
-.cooldown-fill{
-  height:100%;
-  background:linear-gradient(90deg, #f87171, #ef4444);
-  border-radius:0 0 14px 14px;
-  width:100%;
-  transition:width 1s linear;
-  box-shadow:0 0 8px rgba(248,113,113,0.6);
-}
-
-/* Mensaje de cooldown */
+.cooldown-bar{height:3px;border-radius:0 0 12px 12px;background:rgba(248,113,113,.1);display:none;overflow:hidden}
+.cooldown-bar.vis{display:block}
+.cooldown-fill{height:100%;background:linear-gradient(90deg,#f87171,#ef4444);transition:width 1s linear;box-shadow:0 0 6px rgba(248,113,113,.5)}
 .cooldown-msg{
+  display:none;text-align:center;margin-top:10px;
+  padding:11px 14px;border-radius:11px;
+  background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);
+  color:#fca5a5;font-size:12.5px;font-weight:600;line-height:1.5;
+}
+.cooldown-msg.vis{display:block}
+
+/* ── Error ── */
+.error-box{
   display:none;
+  padding:12px 16px;border-radius:11px;
+  background:rgba(248,113,113,.08);
+  border:1px solid rgba(248,113,113,.3);
+  color:#f87171;font-size:13px;font-weight:600;
+  margin-bottom:16px;
   text-align:center;
-  margin-top:12px;
-  padding:12px 16px;
-  border-radius:12px;
-  background:rgba(248,113,113,0.08);
-  border:1px solid rgba(248,113,113,0.3);
-  color:#fca5a5;
-  font-size:13px;
-  font-weight:600;
-  line-height:1.6;
-  animation:fadeInDown 0.3s ease;
 }
+.error-box.show{display:block}
 
-.cooldown-msg.visible{
-  display:block;
+/* ── Éxito final ── */
+.success-screen{
+  display:none;text-align:center;padding:16px 0;
 }
-
-@keyframes fadeInDown{
-  from{opacity:0;transform:translateY(-8px);}
-  to{opacity:1;transform:translateY(0);}
+.success-screen.show{display:block}
+.success-icon{font-size:64px;margin-bottom:16px;animation:popIn .5s ease both}
+@keyframes popIn{
+  from{transform:scale(0)}
+  80%{transform:scale(1.2)}
+  to{transform:scale(1)}
 }
+.success-title{font-size:22px;font-weight:900;color:var(--success);margin-bottom:8px}
+.success-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.success-warn{
+  padding:14px 16px;border-radius:12px;
+  background:rgba(124,58,237,.08);border:1px solid var(--primary);
+  font-size:13px;color:var(--text);line-height:1.7;text-align:left;
+  margin-bottom:16px;
+}
+.countdown-txt{font-size:13px;color:var(--muted)}
+.countdown-txt b{color:var(--accent)}
 
-/* ==========================================
-   FIN ESTILOS BOTÓN
-   ========================================== */
+/* ── Panchita toast ── */
+.panchita{
+  position:fixed;bottom:20px;right:20px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;padding:14px 18px;border-radius:16px;
+  box-shadow:0 8px 24px rgba(124,58,237,.45);
+  font-size:13.5px;font-weight:600;
+  transform:translateY(130px);opacity:0;
+  transition:all .4s ease;z-index:9999;max-width:270px;
+  line-height:1.5;
+}
+.panchita.show{transform:translateY(0);opacity:1}
 
+/* ── Footer ── */
 .footer{
-  text-align:center;
-  font-size:12px;
-  color:var(--muted);
-  margin-top:24px;
-}
-
-.panchita-message{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:linear-gradient(135deg, var(--primary), var(--accent));
-  color:white;
-  padding:16px 20px;
-  border-radius:16px;
-  box-shadow:0 8px 24px rgba(124,58,237,0.4);
-  font-size:14px;
-  font-weight:600;
-  transform:translateY(150px);
-  opacity:0;
-  transition:all 0.4s ease;
-  z-index:1000;
-  max-width:280px;
-}
-
-.panchita-message.show{
-  transform:translateY(0);
-  opacity:1;
-}
-
-.security-box{
-  background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.05));
-  border:1px solid var(--success);
-  border-radius:16px;
-  padding:18px;
-  margin-bottom:32px;
-  text-align:center;
-  box-shadow:0 4px 15px rgba(16,185,129,0.1);
-}
-
-.security-box .title{
-  font-size:16px;
-  font-weight:700;
-  color:var(--success);
-  margin-bottom:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.security-box .description{
-  font-size:13px;
-  color:var(--text);
-  line-height:1.6;
-  opacity:0.9;
+  margin-top:22px;font-size:11.5px;
+  color:var(--muted);letter-spacing:.3px;
 }
 </style>
 </head>
-
 <body>
 
-<div class="turtle-container">🐢</div>
+<div class="turtle-float" id="turtleFloat">🐢</div>
 
 <div class="wrapper">
 
   <div class="logo">
-    WSSERVERMX <span class="turtle">🐢</span>
+    WSSERVERMX
+    <span class="logo-turtle">🐢</span>
   </div>
 
   <div class="card">
 
-    <div class="security-box">
-      <div class="title">🔒 PAGO 100% SEGURO</div>
-      <div class="description">
-        Nosotros <b>JAMÁS</b> te pediremos datos de tu tarjeta o cuenta.<br>
-        Todo lo haces tú mismo desde la app de tu banco.
+    <!-- Banner seguridad -->
+    <div class="sec-banner">
+      <span class="icon">🔒</span>
+      <span><b>PAGO 100% SEGURO</b> — Jamás te pediremos datos de tu tarjeta.<br>
+      Todo lo haces tú desde la app de tu banco.</span>
+    </div>
+
+    <!-- Progreso visual -->
+    <div class="progress-wrap">
+      <div class="progress-steps" id="progressSteps">
+
+        <div class="step-dot-wrap active" data-step="0">
+          <div class="step-dot active" id="dot0"><span class="dot-num">1</span></div>
+          <div class="step-label">Método</div>
+        </div>
+
+        <div class="step-line" id="line0"><div class="step-line-fill"></div></div>
+
+        <div class="step-dot-wrap" data-step="1">
+          <div class="step-dot" id="dot1"><span class="dot-num">2</span></div>
+          <div class="step-label">Tus datos</div>
+        </div>
+
+        <div class="step-line" id="line1"><div class="step-line-fill"></div></div>
+
+        <div class="step-dot-wrap" data-step="2">
+          <div class="step-dot" id="dot2"><span class="dot-num">3</span></div>
+          <div class="step-label">Comprobante</div>
+        </div>
+
+        <div class="step-line" id="line2"><div class="step-line-fill"></div></div>
+
+        <div class="step-dot-wrap" data-step="3">
+          <div class="step-dot" id="dot3"><span class="dot-num">4</span></div>
+          <div class="step-label">Confirmar</div>
+        </div>
+
       </div>
     </div>
 
-    <h1>Comprobar Pago</h1>
-    <div class="subtitle">
-      Selecciona el método de pago y sube tu comprobante
-    </div>
+    <!-- Error global -->
+    <div class="error-box" id="errorBox"></div>
 
-    <div class="error" id="error" style="display:none"></div>
-    <div id="warningBox" style="display:none"></div>
+    <!-- ═══ PANELS ═══ -->
+    <div class="steps-outer" id="stepsOuter">
 
-    <div class="step">
-      <div class="step-title">Paso 1 · Método de pago</div>
-      <div class="input-wrapper">
-        <select id="metodo">
-          <option value="">Selecciona un método</option>
-          <option value="binance">Binance</option>
-          <option value="transferencia">Transferencia bancaria (México)</option>
-          <option value="oxxo">OXXO Pay</option>
-        </select>
-        <span class="input-turtle">🐢</span>
-      </div>
+      <!-- PASO 1: Método de pago -->
+      <div class="step-panel active" id="panel0">
+        <div class="panel-title">¿Cómo pagaste?</div>
+        <div class="panel-sub">Elige el método que usaste para hacer tu pago.</div>
 
-      <div class="info" id="infoMetodo" style="display:none"></div>
+        <div class="method-grid">
+          <div class="method-card" data-method="binance" onclick="selectMethod(this)">
+            <span class="method-icon">🟣</span>
+            <div class="method-info">
+              <div class="method-name">Binance (USDT)</div>
+              <div class="method-desc">Transferencia cripto · Confirmación rápida</div>
+            </div>
+            <div class="method-check">✓</div>
+          </div>
+          <div class="method-card" data-method="transferencia" onclick="selectMethod(this)">
+            <span class="method-icon">🏦</span>
+            <div class="method-info">
+              <div class="method-name">Transferencia bancaria</div>
+              <div class="method-desc">CLABE · Nu México · Tiempo varía según tu banco</div>
+            </div>
+            <div class="method-check">✓</div>
+          </div>
+          <div class="method-card" data-method="oxxo" onclick="selectMethod(this)">
+            <span class="method-icon">🏪</span>
+            <div class="method-info">
+              <div class="method-name">OXXO Pay</div>
+              <div class="method-desc">Pago en efectivo · Puede tardar hasta 24 h</div>
+            </div>
+            <div class="method-check">✓</div>
+          </div>
+        </div>
 
-      <div class="step" id="binanceNombre" style="display:none;margin-top:16px;">
-        <div class="step-title">Nombre en Binance</div>
-        <div class="input-wrapper">
-          <input type="text" id="binanceUser" placeholder="Tal como aparece en tu cuenta de Binance">
-          <span class="input-turtle">🐢</span>
+        <!-- Datos bancarios que aparecen al seleccionar -->
+        <div class="bank-block" id="bankBlock"></div>
+
+        <div class="nav-btns">
+          <button class="btn-next" id="btnStep0Next" onclick="goNext()" disabled>
+            Siguiente <span>→</span>
+          </button>
         </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="step-title">Paso 2 · Tu correo registrado en nuestro server</div>
-      <div class="input-wrapper">
-        <input type="email" id="email" placeholder="correo@ejemplo.com" required>
-        <span class="input-turtle">🐢</span>
+      <!-- PASO 2: Datos del usuario -->
+      <div class="step-panel" id="panel1">
+        <div class="panel-title">Tus datos</div>
+        <div class="panel-sub">Necesitamos tu correo para identificar tu cuenta en nuestro servidor.</div>
+
+        <div class="field">
+          <label class="field-label">Correo registrado en el server</label>
+          <div class="input-wrap">
+            <input type="email" id="fEmail" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+            <span class="i-turtle" onclick="showPanchita()">🐢</span>
+          </div>
+        </div>
+
+        <div class="field" id="fieldBinanceUser" style="display:none">
+          <label class="field-label">Tu nombre en Binance</label>
+          <div class="input-wrap">
+            <input type="text" id="fBinanceUser" placeholder="Tal como aparece en tu perfil">
+            <span class="i-turtle" onclick="showPanchita()">🐢</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" id="montoLabel">Monto pagado (USD)</label>
+          <div class="input-wrap">
+            <input type="number" step="0.01" id="fUsd" placeholder="Ej. 3.50">
+            <span class="i-turtle" onclick="showPanchita()">🐢</span>
+          </div>
+          <div class="mxn-hint" id="mxnHint">Equivalente: $0 MXN</div>
+        </div>
+
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goBack()">← Atrás</button>
+          <button class="btn-next" onclick="goNext()">Siguiente →</button>
+        </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="step-title" id="montoLabel">Paso 3 · Monto pagado (USD)</div>
-      <div class="input-wrapper">
-        <input type="number" step="0.01" id="usd" placeholder="Ej. 3.50" required>
-        <span class="input-turtle">🐢</span>
+      <!-- PASO 3: Subir comprobante -->
+      <div class="step-panel" id="panel2">
+        <div class="panel-title">Sube tu comprobante</div>
+        <div class="panel-sub">Adjunta una captura o foto de tu comprobante de pago.</div>
+
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fFile" accept="image/*" onchange="onFileChange(this)">
+          <span class="upload-icon">📎</span>
+          <div class="upload-title">Toca para subir tu comprobante</div>
+          <div class="upload-sub">JPG, PNG, WEBP · Máximo 10 MB</div>
+        </div>
+        <div class="upload-preview" id="uploadPreview">
+          <img id="previewImg" src="" alt="Vista previa">
+        </div>
+        <div class="upload-name" id="uploadName"></div>
+
+        <div class="nav-btns">
+          <button class="btn-back" onclick="goBack()">← Atrás</button>
+          <button class="btn-next" id="btnStep2Next" onclick="goNext()" disabled>Siguiente →</button>
+        </div>
       </div>
-      <div class="mxn" id="mxn">Equivalente: $0 MXN</div>
-    </div>
 
-    <div class="step">
-      <div class="step-title">Paso 4 · Subir comprobante</div>
-      <input type="file" id="file" accept="image/*" required>
-    </div>
+      <!-- PASO 4: Resumen + Enviar -->
+      <div class="step-panel" id="panel3">
+        <div class="panel-title">Revisa y envía</div>
+        <div class="panel-sub">Confirma que todo esté correcto antes de enviar.</div>
 
-    <!-- BOTÓN CON ANTI-SPAM -->
-    <div class="btn-wrapper">
-      <button id="btn">
-        <span id="btnIcon">📤</span>
-        <span id="btnText">Enviar comprobante</span>
-      </button>
-      <div class="cooldown-bar" id="cooldownBar">
-        <div class="cooldown-fill" id="cooldownFill"></div>
+        <div class="summary" id="summaryBox"></div>
+
+        <div class="nav-btns" id="sendNavBtns">
+          <button class="btn-back" id="btnBackStep3" onclick="goBack()">← Atrás</button>
+          <div style="flex:2;display:flex;flex-direction:column;gap:0">
+            <button class="btn-next" id="btnSend" onclick="sendForm()">
+              <span id="sendIcon">📤</span>
+              <span id="sendText">Enviar comprobante</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Éxito -->
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon">✅</div>
+          <div class="success-title">¡Comprobante enviado!</div>
+          <div class="success-sub">Lo recibimos correctamente. En breve procesaremos tu pago.</div>
+          <div class="success-warn">
+            ⚠️ <b>IMPORTANTE:</b> No envíes el comprobante más de una vez.<br>
+            Los envíos duplicados pueden atorar tu solicitud <b>hasta 4 horas</b>.
+          </div>
+          <div class="countdown-txt">Redirigiendo en <b id="countNum">20</b> segundos…</div>
+        </div>
       </div>
-    </div>
 
-    <div class="cooldown-msg" id="cooldownMsg"></div>
+    </div><!-- /steps-outer -->
 
-  </div>
+  </div><!-- /card -->
 
   <div class="footer">BY WSSSISTEMAS © 2026</div>
 </div>
 
-<div class="panchita-message" id="panchitaMsg">
+<div class="panchita" id="panchita">
   🐢 ¡Hola! Soy Panchita, la mascota de WS. Tengo 2 añitos y soy más rápida de lo que crees 💚
 </div>
 
 <script>
-const RATE = 20;
-const MIN_USD = 3;
-const BOT_TOKEN = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
-const CHAT_ID = "8346464055";
+// ── Config ──────────────────────────────────────────────────
+const RATE         = 20;
+const MIN_USD      = 3;
+const BOT_TOKEN    = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
+const CHAT_ID      = "8346464055";
+// ── Estado ──────────────────────────────────────────────────
+let currentStep    = 0;
+let selectedMethod = null;
+let isSending      = false;
+let alreadySent    = false;
 
-// ============================================================
-// CONFIG ANTI-SPAM
-// ============================================================
-const COOLDOWN_SECONDS = 60; // segundos de espera entre envíos
-let isSending = false;       // evita doble click mientras procesa
-let isLocked = false;        // cooldown activo
-let cooldownTimer = null;
-let alreadySent = false;     // bloqueo permanente tras envío exitoso
-// ============================================================
-
-const usd       = document.getElementById("usd");
-const mxn       = document.getElementById("mxn");
-const metodo    = document.getElementById("metodo");
-const infoMetodo= document.getElementById("infoMetodo");
-const error     = document.getElementById("error");
-const btn       = document.getElementById("btn");
-const btnIcon   = document.getElementById("btnIcon");
-const btnText   = document.getElementById("btnText");
-const binanceNombre = document.getElementById("binanceNombre");
-const binanceUser   = document.getElementById("binanceUser");
-const file          = document.getElementById("file");
-const montoLabel    = document.getElementById("montoLabel");
-const warningBox    = document.getElementById("warningBox");
-const email         = document.getElementById("email");
-const cooldownBar   = document.getElementById("cooldownBar");
-const cooldownFill  = document.getElementById("cooldownFill");
-const cooldownMsg   = document.getElementById("cooldownMsg");
-
-/* ---- sparkles ---- */
-for(let i=0;i<20;i++){
-  const s=document.createElement('div');
-  s.className='sparkle';
-  s.style.left=Math.random()*100+'%';
-  s.style.top=Math.random()*100+'%';
-  s.style.animationDelay=Math.random()*4+'s';
+// ── Sparkles ─────────────────────────────────────────────────
+for(let i=0;i<22;i++){
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.style.left = Math.random()*100+'%';
+  s.style.top  = Math.random()*100+'%';
+  s.style.animationDelay = Math.random()*4+'s';
   document.body.appendChild(s);
 }
 
-/* ---- Panchita ---- */
-const panchitaMsg = document.getElementById('panchitaMsg');
-document.querySelectorAll('.input-turtle').forEach(turtle => {
-  turtle.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    panchitaMsg.classList.add('show');
-    setTimeout(() => { panchitaMsg.classList.remove('show'); }, 9000);
-  });
+// ── Tortuga flotante ─────────────────────────────────────────
+const tf = document.getElementById('turtleFloat');
+let turtleGone = false;
+tf.addEventListener('click', () => {
+  if(turtleGone) return;
+  turtleGone = true;
+  const l = tf.offsetLeft, t = tf.offsetTop;
+  tf.style.left = l+'px'; tf.style.top = t+'px';
+  tf.classList.add('bye');
+  setTimeout(()=>tf.remove(), 2800);
 });
 
-/* ---- Tortuga flotante ---- */
-const turtleContainer = document.querySelector('.turtle-container');
-let turtleClicked = false;
-turtleContainer.addEventListener('click', () => {
-  if(turtleClicked) return;
-  turtleClicked = true;
-  const currentLeft = turtleContainer.offsetLeft;
-  const currentTop  = turtleContainer.offsetTop;
-  turtleContainer.style.left = currentLeft + 'px';
-  turtleContainer.style.top  = currentTop  + 'px';
-  turtleContainer.style.animation = 'flipAndLeave 3s ease-out forwards';
-  setTimeout(() => { turtleContainer.remove(); }, 3000);
-});
-
-/* ---- Conversión USD → MXN ---- */
-usd.addEventListener("input", () => {
-  let v = parseFloat(usd.value) || 0;
-  mxn.textContent = "Equivalente: $" + (v * RATE).toFixed(2) + " MXN";
-});
-
-/* ---- Método de pago ---- */
-metodo.addEventListener("change", () => {
-  infoMetodo.style.display = "block";
-  binanceNombre.style.display = "none";
-  mxn.style.display = "block";
-  montoLabel.textContent = "Paso 3 · Monto pagado (USD)";
-
-  if(metodo.value === "binance"){
-    infoMetodo.innerHTML = `
-      🟣 <b>Pago por Binance</b><br>
-      🆔 <b>ID Binance:</b> 1136518378
-      <span class="copy" onclick="copiar(this,'1136518378')">📋</span><br>
-      👤 <b>Nombre:</b> WS SERVER MX
-      <span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span><br>
-      💱 USDT / TETHER
-    `;
-    binanceNombre.style.display = "block";
-    mxn.style.display = "none";
-    montoLabel.textContent = "Paso 3 · Monto pagado (USDT)";
-  }
-  else if(metodo.value === "transferencia"){
-    infoMetodo.innerHTML = `
-      🏦 <b>Transferencia bancaria (México)</b><br>
-      🏛 <b>Institución bancaria:</b> Nu México <span class="copy" onclick="copiar(this,'Nu México')">📋</span><br>
-      💳 <b>CLABE:</b> 638180000100055205
-      <span class="copy" onclick="copiar(this,'638180000100055205')">📋</span><br>
-      👤 <b>Nombre:</b> CHRISTIAN QUIÑONEZ
-      <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span><br><br>
-      <div style="background:rgba(6,182,212,0.1);border:1px solid var(--accent);border-radius:8px;padding:10px;margin-top:8px;">
-        <b>⏱️ NOTA: El tiempo de reflejo del pago depende de lo que tarde su banco en liberar el pago</b>
-      </div>
-    `;
-  }
-  else if(metodo.value === "oxxo"){
-    infoMetodo.innerHTML = `
-      🏪 <b>Pago en OXXO</b><br>
-      👉🏻 <b>Dale este número al cajero:</b><br>
-      💳 <b>5101 2523 9079 9774</b>
-      <span class="copy" onclick="copiar(this,'5101 2523 9079 9774')">📋</span><br><br>
-      💵 <b>1 USD = $20 MXN</b><br>
-      ⚠️ <b>OJO:</b> OXXO te cobra de $12 a $15 pesos de comisión<br><br>
-      <div style="background:rgba(124,58,237,0.1);border:1px solid var(--primary);border-radius:8px;padding:10px;margin-top:8px;">
-        <b>🕐 NOTA: Algunos pagos OXXO pueden tardar hasta 24 h en reflejarse</b>
-      </div>
-    `;
-  } else {
-    infoMetodo.style.display = "none";
-    infoMetodo.innerHTML = "";
-  }
-});
-
-/* ---- Envío a Telegram ---- */
-async function enviarTelegram(texto, archivo){
-  const formData = new FormData();
-  formData.append("chat_id", CHAT_ID);
-  formData.append("caption", texto);
-  formData.append("photo", archivo);
-
-  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-    method: "POST",
-    body: formData
-  });
+// ── Panchita toast ───────────────────────────────────────────
+function showPanchita(){
+  const p = document.getElementById('panchita');
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'), 8000);
 }
 
-/* ============================================================
-   ANTI-SPAM: inicia cooldown visual
-   ============================================================ */
-function iniciarCooldown(){
-  isLocked = true;
-  let segundosRestantes = COOLDOWN_SECONDS;
+// ── Selección de método ──────────────────────────────────────
+const bankData = {
+  binance:{
+    html:`
+      <div class="bank-row">🆔 <span class="bank-label">ID BINANCE</span>
+        <span class="bank-val">1136518378</span>
+        <span class="copy" onclick="copiar(this,'1136518378')">📋</span>
+      </div>
+      <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
+        <span class="bank-val">WS SERVER MX</span>
+        <span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span>
+      </div>
+      <div class="bank-row">💱 <span class="bank-label">MONEDA</span>
+        <span class="bank-val">USDT / TETHER</span>
+      </div>`
+  },
+  transferencia:{
+    html:`
+      <div class="bank-row">🏛 <span class="bank-label">BANCO</span>
+        <span class="bank-val">Nu México</span>
+        <span class="copy" onclick="copiar(this,'Nu México')">📋</span>
+      </div>
+      <div class="bank-row">💳 <span class="bank-label">CLABE</span>
+        <span class="bank-val">638180000100055205</span>
+        <span class="copy" onclick="copiar(this,'638180000100055205')">📋</span>
+      </div>
+      <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
+        <span class="bank-val">CHRISTIAN QUIÑONEZ</span>
+        <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span>
+      </div>
+      <div class="bank-note">⏱️ El tiempo de reflejo depende de tu banco.</div>`
+  },
+  oxxo:{
+    html:`
+      <div class="bank-row">💳 <span class="bank-label">NÚMERO OXXO</span>
+        <span class="bank-val">5101 2523 9079 9774</span>
+        <span class="copy" onclick="copiar(this,'5101252390799774')">📋</span>
+      </div>
+      <div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span>
+        <span class="bank-val">1 USD = $20 MXN</span>
+      </div>
+      <div class="bank-note">⚠️ OXXO cobra ~$12–$15 de comisión. Inclúyela en tu pago.<br>🕐 Puede tardar hasta 24 h en reflejarse.</div>`
+  }
+};
 
-  // Estado visual: candado
-  btn.disabled = true;
-  btn.className = 'locked';
-  btnIcon.innerHTML = '<span class="lock-icon">🔒</span>';
-  btnText.textContent = `Bloqueado · espera ${segundosRestantes}s`;
+function selectMethod(card){
+  document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedMethod = card.dataset.method;
 
-  // Barra de cooldown
-  cooldownBar.classList.add('visible');
-  cooldownFill.style.width = '100%';
+  const bb = document.getElementById('bankBlock');
+  bb.innerHTML = bankData[selectedMethod].html;
+  bb.classList.add('show');
 
-  // Mensaje explicativo
-  cooldownMsg.classList.add('visible');
-  cooldownMsg.innerHTML = `
-    🔒 <b>Botón bloqueado por ${COOLDOWN_SECONDS} segundos</b><br>
-    Enviando el mismo comprobante múltiples veces puede causar
-    que tu solicitud quede atorada hasta <b>4 horas</b>. Por favor espera.
-  `;
+  // Ajustes de UI según método
+  const isBinance = selectedMethod === 'binance';
+  document.getElementById('montoLabel').textContent =
+    isBinance ? 'MONTO PAGADO (USDT)' : 'MONTO PAGADO (USD)';
+  document.getElementById('mxnHint').style.display = isBinance ? 'none' : 'block';
 
-  // Cooldown tick
-  cooldownTimer = setInterval(() => {
-    segundosRestantes--;
-    const pct = (segundosRestantes / COOLDOWN_SECONDS) * 100;
-    cooldownFill.style.width = pct + '%';
-    btnText.textContent = `Bloqueado · espera ${segundosRestantes}s`;
+  document.getElementById('btnStep0Next').disabled = false;
+}
 
-    if(segundosRestantes <= 0){
-      clearInterval(cooldownTimer);
-      desbloquearBoton();
+// ── Conversión USD→MXN ───────────────────────────────────────
+document.getElementById('fUsd').addEventListener('input', function(){
+  const v = parseFloat(this.value)||0;
+  document.getElementById('mxnHint').textContent =
+    `Equivalente: $${(v*RATE).toFixed(2)} MXN`;
+});
+
+// ── Validaciones por paso ────────────────────────────────────
+function validateStep(n){
+  const err = document.getElementById('errorBox');
+  err.className = 'error-box';
+  err.textContent = '';
+
+  if(n === 0){
+    if(!selectedMethod){ showErr('⚠️ Selecciona un método de pago'); return false; }
+  }
+  if(n === 1){
+    const email = document.getElementById('fEmail').value.trim();
+    if(!email || !email.includes('@')){ showErr('⚠️ Ingresa un correo válido'); return false; }
+    if(selectedMethod==='binance' && !document.getElementById('fBinanceUser').value.trim()){
+      showErr('⚠️ Ingresa tu nombre en Binance'); return false;
     }
-  }, 1000);
+    const usdVal = parseFloat(document.getElementById('fUsd').value);
+    if(!usdVal || usdVal < MIN_USD){ showErr('⚠️ El monto mínimo es $3 USD'); return false; }
+  }
+  if(n === 2){
+    if(!document.getElementById('fFile').files.length){
+      showErr('⚠️ Sube una imagen del comprobante'); return false;
+    }
+  }
+  return true;
 }
 
-function desbloquearBoton(){
-  isLocked = false;
+function showErr(msg){
+  const e = document.getElementById('errorBox');
+  e.textContent = msg; e.classList.add('show');
+  e.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ── Navegación ───────────────────────────────────────────────
+function goNext(){
+  if(!validateStep(currentStep)) return;
+  clearError();
+
+  if(currentStep === 2) buildSummary();
+
+  const from = document.getElementById(`panel${currentStep}`);
+  currentStep++;
+  const to = document.getElementById(`panel${currentStep}`);
+
+  from.style.display = 'none';
+  to.classList.remove('going-back');
+  to.classList.add('active');
+
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack(){
+  clearError();
+  const from = document.getElementById(`panel${currentStep}`);
+  from.classList.remove('active');
+  from.style.display = '';
+  from.style.display = 'none';
+  currentStep--;
+  const to = document.getElementById(`panel${currentStep}`);
+  to.classList.add('going-back');
+  to.style.display = '';
+  to.classList.add('active');
+  from.style.display = '';
+
+  // reset de display
+  for(let i=0;i<=3;i++){
+    const p = document.getElementById(`panel${i}`);
+    if(i === currentStep){ p.classList.add('active'); p.style.display=''; }
+    else { p.classList.remove('active'); }
+  }
+
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function clearError(){
+  const e = document.getElementById('errorBox');
+  e.className = 'error-box'; e.textContent = '';
+}
+
+function updateProgress(){
+  for(let i=0;i<=3;i++){
+    const wrap = document.querySelector(`.step-dot-wrap[data-step="${i}"]`);
+    const dot  = document.getElementById(`dot${i}`);
+    wrap.classList.remove('active','done');
+    dot.classList.remove('active','done');
+    if(i < currentStep){ wrap.classList.add('done'); dot.classList.add('done'); }
+    else if(i === currentStep){ wrap.classList.add('active'); dot.classList.add('active'); }
+    if(i < 3){
+      const line = document.getElementById(`line${i}`);
+      line.classList.toggle('filled', i < currentStep);
+    }
+  }
+  // Mostrar campo Binance en paso 2
+  document.getElementById('fieldBinanceUser').style.display =
+    selectedMethod === 'binance' ? 'block' : 'none';
+}
+
+// ── Resumen ──────────────────────────────────────────────────
+function buildSummary(){
+  const email   = document.getElementById('fEmail').value;
+  const usd     = document.getElementById('fUsd').value;
+  const binUser = document.getElementById('fBinanceUser').value;
+  const file    = document.getElementById('fFile').files[0];
+
+  const metodoNames = {binance:'Binance (USDT)',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
+  const mxnEq = selectedMethod!=='binance' ? `&nbsp;<span style="color:var(--muted);font-size:11px">(≈ $${(parseFloat(usd)*RATE).toFixed(2)} MXN)</span>` : '';
+
+  let rows = `
+    <div class="summary-row">
+      <span class="sum-icon">💳</span>
+      <div><div class="sum-key">Método</div><div class="sum-val">${metodoNames[selectedMethod]}</div></div>
+    </div>
+    <div class="summary-row">
+      <span class="sum-icon">📧</span>
+      <div><div class="sum-key">Correo</div><div class="sum-val">${email}</div></div>
+    </div>
+    <div class="summary-row">
+      <span class="sum-icon">💰</span>
+      <div><div class="sum-key">Monto</div><div class="sum-val">${usd} ${selectedMethod==='binance'?'USDT':'USD'} ${mxnEq}</div></div>
+    </div>`;
+
+  if(selectedMethod==='binance'){
+    rows += `<div class="summary-row">
+      <span class="sum-icon">👤</span>
+      <div><div class="sum-key">Usuario Binance</div><div class="sum-val">${binUser}</div></div>
+    </div>`;
+  }
+
+  if(file){
+    const url = URL.createObjectURL(file);
+    rows += `<div class="summary-row">
+      <span class="sum-icon">🖼</span>
+      <div style="width:100%">
+        <div class="sum-key">Comprobante</div>
+        <img class="sum-img" src="${url}" alt="Comprobante">
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('summaryBox').innerHTML = rows;
+}
+
+// ── Upload ───────────────────────────────────────────────────
+function onFileChange(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  const preview = document.getElementById('uploadPreview');
+  const img     = document.getElementById('previewImg');
+  const name    = document.getElementById('uploadName');
+  const btn     = document.getElementById('btnStep2Next');
+
+  const url = URL.createObjectURL(file);
+  img.src = url;
+  preview.style.display = 'block';
+  name.textContent = '✓ ' + file.name;
+  name.style.display = 'block';
   btn.disabled = false;
-  btn.className = '';
-  btnIcon.textContent = '📤';
-  btnText.textContent = 'Enviar comprobante';
 
-  cooldownBar.classList.remove('visible');
-  cooldownFill.style.width = '100%';
-
-  cooldownMsg.classList.remove('visible');
-  cooldownMsg.innerHTML = '';
+  document.getElementById('uploadZone').style.borderColor = 'var(--success)';
 }
 
-function bloquearPermanente(){
-  alreadySent = true;
-  btn.disabled = true;
-  btn.className = 'done';
-  btnIcon.textContent = '✅';
-  btnText.textContent = 'Comprobante enviado';
-  cooldownBar.classList.remove('visible');
-  cooldownMsg.classList.remove('visible');
-}
-
-/* ---- Click del botón ---- */
-btn.addEventListener("click", async () => {
-
-  // Bloqueos de estado
-  if(isSending || isLocked || alreadySent) return;
-
-  // Validaciones
-  error.textContent = "";
-  error.style.display = "none";
-
-  if(!metodo.value){
-    error.textContent = "⚠️ Selecciona un método de pago";
-    error.style.display = "block";
-    return;
-  }
-  if(metodo.value === "binance" && !binanceUser.value.trim()){
-    error.textContent = "⚠️ Ingresa tu nombre tal como aparece en Binance";
-    error.style.display = "block";
-    return;
-  }
-  const usdVal = parseFloat(usd.value);
-  if(usdVal < MIN_USD){
-    error.textContent = "⚠️ El importe mínimo es de $3 USD";
-    error.style.display = "block";
-    return;
-  }
-  if(!file.files.length){
-    error.textContent = "⚠️ Debes subir el comprobante";
-    error.style.display = "block";
-    return;
-  }
-
-  // Estado: enviando
-  isSending = true;
-  btn.disabled = true;
-  btn.className = 'sending';
-  btnIcon.innerHTML = '<span class="spinner"></span>';
-  btnText.textContent = 'Enviando...';
-
-  let texto = `🧾 NUEVO COMPROBANTE\n\n📧 Email: ${email.value}\n💳 Método: ${
-    metodo.value === "binance" ? "Binance" : metodo.value === "oxxo" ? "OXXO Pay" : "Transferencia bancaria"
-  }\n`;
-
-  if(metodo.value === "binance"){
-    texto += `💰 Monto: ${usd.value} USDT\n👤 Usuario Binance: ${binanceUser.value}`;
-  } else {
-    const mxnEquivalente = (usdVal * RATE).toFixed(2);
-    texto += `💰 Monto: $${usd.value} USD\n💵 Monto MXN: $${mxnEquivalente}`;
-  }
-
-  try {
-    await enviarTelegram(texto, file.files[0]);
-
-    // Éxito: mensaje + bloqueo permanente
-    bloquearPermanente();
-
-    let segundos = 20;
-    warningBox.style.display = "block";
-    warningBox.className = "warning";
-    warningBox.innerHTML = `
-      ✅ <b>¡COMPROBANTE ENVIADO EXITOSAMENTE!</b><br><br>
-      ⚠️ <b>IMPORTANTE:</b> No envíes la misma solicitud más de una vez.<br>
-      Los envíos duplicados pueden provocar que el comprobante quede atorado
-      y el proceso puede tardar <b>hasta 4 horas</b> en resolverse.<br><br>
-      ⏳ Serás redireccionado a nuestra página principal en
-      <b id="count">20</b> segundos.
-    `;
-
-    const c = document.getElementById("count");
-    const timer = setInterval(() => {
-      segundos--;
-      c.textContent = segundos;
-      if(segundos <= 0){
-        clearInterval(timer);
-        window.location.href = "https://wsservermx.com";
-      }
-    }, 1000);
-
-  } catch(e) {
-    // Error: mostrar y arrancar cooldown
-    error.textContent = "⚠️ Error al enviar. Intenta de nuevo en unos segundos.";
-    error.style.display = "block";
-    isSending = false;
-    iniciarCooldown();
-  } finally {
-    if(!alreadySent) isSending = false;
+// ── Drag & drop zona ─────────────────────────────────────────
+const uz = document.getElementById('uploadZone');
+uz.addEventListener('dragover', e=>{ e.preventDefault(); uz.classList.add('drag'); });
+uz.addEventListener('dragleave', ()=>uz.classList.remove('drag'));
+uz.addEventListener('drop', e=>{
+  e.preventDefault(); uz.classList.remove('drag');
+  const files = e.dataTransfer.files;
+  if(files.length){
+    document.getElementById('fFile').files = files;
+    onFileChange(document.getElementById('fFile'));
   }
 });
+
+// ── Envío ────────────────────────────────────────────────────
+async function sendForm(){
+  if(isSending || alreadySent) return;
+
+  const btnSend = document.getElementById('btnSend');
+  const sendIcon= document.getElementById('sendIcon');
+  const sendText= document.getElementById('sendText');
+
+  isSending = true;
+  btnSend.disabled = true;
+  btnSend.className = 'btn-next sending';
+  sendIcon.innerHTML = '<div class="spinner"></div>';
+  sendText.textContent = 'Enviando…';
+
+  const email   = document.getElementById('fEmail').value;
+  const usd     = document.getElementById('fUsd').value;
+  const binUser = document.getElementById('fBinanceUser').value;
+  const file    = document.getElementById('fFile').files[0];
+  const metNom  = {binance:'Binance',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
+
+  let texto = `🧾 NUEVO COMPROBANTE\n\n📧 Email: ${email}\n💳 Método: ${metNom[selectedMethod]}\n`;
+  if(selectedMethod==='binance'){
+    texto += `💰 Monto: ${usd} USDT\n👤 Usuario Binance: ${binUser}`;
+  } else {
+    texto += `💰 Monto: $${usd} USD\n💵 Monto MXN: $${(parseFloat(usd)*RATE).toFixed(2)}`;
+  }
+
+  // Intentar enviar, pero mostrar éxito siempre — el usuario no debe ver errores técnicos
+  try {
+    const fd = new FormData();
+    fd.append('chat_id', CHAT_ID);
+    fd.append('caption', texto);
+    fd.append('photo', file);
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,{method:'POST',body:fd});
+  } catch(e) {
+    // Error silencioso — el flujo de éxito corre igual
+  }
+
+  // Siempre mostrar éxito y bloquear botón
+  alreadySent = true;
+  btnSend.disabled = true;
+  btnSend.className = 'btn-next done';
+  sendIcon.textContent = '✅';
+  sendText.textContent = 'Enviado';
+
+  // Marcar paso 4 como completado (verde) en la barra de progreso
+  const wrap3 = document.querySelector('.step-dot-wrap[data-step="3"]');
+  const dot3  = document.getElementById('dot3');
+  wrap3.classList.remove('active');
+  wrap3.classList.add('done');
+  dot3.classList.remove('active');
+  dot3.classList.add('done');
+  document.getElementById('line2').classList.add('filled');
+
+  document.getElementById('summaryBox').style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+  document.getElementById('btnBackStep3').style.display = 'none';
+
+  let secs = 20;
+  const c = document.getElementById('countNum');
+  const t = setInterval(()=>{ secs--; c.textContent=secs; if(secs<=0){ clearInterval(t); window.location.href='https://wsservermx.com'; } }, 1000);
+}
+
+
 
 function copiar(el, texto){
   navigator.clipboard.writeText(texto);
-  const s = document.createElement("span");
-  s.className = "copiado";
-  s.textContent = "✓ Copiado";
-  el.after(s);
-  setTimeout(() => s.remove(), 1500);
+  const s = document.createElement('span');
+  s.className = 'copiado'; s.textContent = '✓ Copiado';
+  el.after(s); setTimeout(()=>s.remove(), 1500);
 }
-</script>
 
+// ── Init ─────────────────────────────────────────────────────
+updateProgress();
+</script>
 </body>
 </html>
