@@ -122,7 +122,6 @@ body::before{
 .sec-banner .icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .sec-banner b{color:#6ee7b7}
 
-/* ── Código de recarga ── */
 .recarga-banner{
   display:none;
   align-items:center;gap:12px;
@@ -398,7 +397,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
       Todo lo haces tú desde la app de tu banco.</span>
     </div>
 
-    <!-- Código de recarga leído de la URL -->
     <div class="recarga-banner" id="recargaBanner">
       <div class="recarga-left">
         <div class="recarga-label">🎟️ Código de recarga</div>
@@ -442,7 +440,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
 
     <div class="steps-outer" id="stepsOuter">
 
-      <!-- PASO 1 -->
       <div class="step-panel active" id="panel0">
         <div class="panel-title">¿Qué método de pago usaste?</div>
         <div class="panel-sub">Elige el método con el que realizaste tu pago.</div>
@@ -483,7 +480,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
         </div>
       </div>
 
-      <!-- PASO 2 -->
       <div class="step-panel" id="panel1">
         <div class="panel-title">Tus datos</div>
         <div class="panel-sub">Ingresa tu correo y el monto que pagaste.</div>
@@ -539,7 +535,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
         </div>
       </div>
 
-      <!-- PASO 3 -->
       <div class="step-panel" id="panel2">
         <div class="panel-title">Sube tu comprobante</div>
         <div class="panel-sub">Adjunta la captura o foto de tu comprobante de pago.</div>
@@ -561,7 +556,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
         </div>
       </div>
 
-      <!-- PASO 4 -->
       <div class="step-panel" id="panel3">
         <div class="panel-title">Revisa y envía</div>
         <div class="panel-sub">Confirma que todo esté correcto antes de enviar.</div>
@@ -613,7 +607,6 @@ let isSending      = false;
 let alreadySent    = false;
 let checks         = [false, false];
 
-// Leer ?recarga= de la URL
 const codigoRecarga = new URLSearchParams(window.location.search).get('recarga') || '';
 
 if(codigoRecarga){
@@ -909,6 +902,16 @@ async function sendForm(){
     fd.append('chat_id', CHAT_ID);
     fd.append('caption', texto);
     fd.append('photo', file);
+    
+    if(codigoRecarga){
+      const replyMarkup = {
+        inline_keyboard: [[
+          {text: '📋 Copiar Código', copy_text: {text: codigoRecarga}}
+        ]]
+      };
+      fd.append('reply_markup', JSON.stringify(replyMarkup));
+    }
+    
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,{method:'POST',body:fd});
   } catch(e) {}
 
