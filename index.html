@@ -3,479 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprobar Pago | WSSERVERMX</title>
+<title>Comprobar Pago | AutoPagoWS</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg:#07091a;
-  --card:#0f1326;
-  --card2:#131929;
-  --border:#1e2740;
-  --border2:#252e50;
-  --text:#e8eaed;
-  --muted:#8b93a7;
-  --primary:#7c3aed;
-  --primary-light:#a78bfa;
-  --accent:#06b6d4;
-  --success:#10b981;
-  --danger:#f87171;
-  --font:'Outfit',sans-serif;
-  --mono:'JetBrains Mono',monospace;
+  --bg:#07091a;--card:#0f1326;--card2:#131929;--border:#1e2740;--border2:#252e50;
+  --text:#e8eaed;--muted:#8b93a7;
+  --primary:#7c3aed;--primary-light:#a78bfa;--accent:#06b6d4;
+  --success:#10b981;--danger:#f87171;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:var(--font);
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  position:relative;
-  overflow-x:hidden;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(6,182,212,0.08) 0%, transparent 60%);
-}
-
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:radial-gradient(circle, rgba(124,58,237,0.12) 1px, transparent 1px);
-  background-size:32px 32px;
-  pointer-events:none;
-  z-index:0;
-}
-
-.sparkle{
-  position:fixed;width:2px;height:2px;
-  background:var(--primary-light);border-radius:50%;
-  pointer-events:none;opacity:0;
-  animation:sparkle 4s infinite;
-  box-shadow:0 0 4px var(--primary-light);z-index:1;
-}
-@keyframes sparkle{
-  0%,100%{opacity:0;transform:scale(0)}
-  50%{opacity:.8;transform:scale(1.5)}
-}
-
-.turtle-float{
-  position:fixed;font-size:38px;top:20%;left:-70px;
-  filter:drop-shadow(0 0 10px rgba(124,58,237,.6));
-  animation:swim 9s ease-in-out infinite;
-  z-index:100;cursor:pointer;pointer-events:auto;transition:transform .3s;
-}
+body{font-family:var(--font);min-height:100vh;background:var(--bg);color:var(--text);position:relative;overflow-x:hidden;
+  background-image:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(124,58,237,.18) 0%,transparent 70%),
+  radial-gradient(ellipse 50% 40% at 90% 80%,rgba(6,182,212,.08) 0%,transparent 60%);}
+body::before{content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,rgba(124,58,237,.12) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;z-index:0;}
+.sparkle{position:fixed;width:2px;height:2px;background:var(--primary-light);border-radius:50%;
+  pointer-events:none;opacity:0;animation:sparkle 4s infinite;z-index:1;}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:.8;transform:scale(1.5)}}
+.turtle-float{position:fixed;font-size:38px;top:20%;left:-70px;
+  animation:swim 9s ease-in-out infinite;z-index:100;cursor:pointer;transition:transform .3s;}
 .turtle-float:hover{transform:scale(1.15)}
-@keyframes swim{
-  0%{left:-70px;top:22%}30%{top:16%}60%{left:55%;top:32%}100%{left:110%;top:22%}
-}
+@keyframes swim{0%{left:-70px;top:22%}30%{top:16%}60%{left:55%;top:32%}100%{left:110%;top:22%}}
 .turtle-float.bye{animation:turtleBye 2.8s ease-out forwards!important}
-@keyframes turtleBye{
-  0%{transform:rotate(0) scale(1);opacity:1}
-  30%{transform:rotate(180deg) scale(1.5);opacity:1}
-  60%{transform:rotate(360deg) scale(1);opacity:1}
-  100%{transform:rotate(360deg) translateY(-900px);opacity:0}
-}
-
-.wrapper{
-  position:relative;z-index:2;min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;
-  padding:28px 16px 48px;
-}
-
-.logo{
-  font-size:26px;font-weight:900;letter-spacing:-1px;
+@keyframes turtleBye{0%{transform:rotate(0) scale(1);opacity:1}30%{transform:rotate(180deg) scale(1.5)}
+  60%{transform:rotate(360deg) scale(1)}100%{transform:rotate(360deg) translateY(-900px);opacity:0}}
+.wrapper{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px;}
+.logo{font-size:26px;font-weight:900;letter-spacing:-1px;
   background:linear-gradient(120deg,var(--primary),var(--accent),var(--primary-light));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 2px 10px rgba(124,58,237,.5));
-  margin-bottom:28px;display:flex;align-items:center;gap:10px;
-}
-.logo-turtle{
-  font-size:28px;-webkit-text-fill-color:initial;display:inline-block;
-  animation:float 2.6s ease-in-out infinite;
-  filter:drop-shadow(0 3px 8px rgba(6,182,212,.6));
-}
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(-5deg)}
-  50%{transform:translateY(-10px) rotate(5deg)}
-}
-
-.card{
-  width:100%;max-width:580px;
+  margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.logo-turtle{font-size:28px;-webkit-text-fill-color:initial;animation:float 2.6s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+.card{width:100%;max-width:580px;
   background:linear-gradient(160deg,#0f1326 0%,#0c1020 100%);
-  border:1px solid var(--border);border-radius:28px;
-  padding:36px 32px 32px;
-  box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px rgba(124,58,237,.15),inset 0 1px 0 rgba(255,255,255,.04);
-  position:relative;overflow:hidden;
-}
-.card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),rgba(6,182,212,.4),transparent);
-}
-
-.sec-banner{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:14px 16px;background:rgba(16,185,129,.07);
-  border:1px solid rgba(16,185,129,.3);border-radius:14px;
-  margin-bottom:28px;font-size:13px;color:var(--text);line-height:1.55;
-}
-.sec-banner .icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.sec-banner b{color:#6ee7b7}
-
-.recarga-banner{
-  display:none;
-  align-items:center;gap:12px;
-  padding:14px 16px;
-  background:rgba(6,182,212,.07);
-  border:1px solid rgba(6,182,212,.35);
-  border-radius:14px;
-  margin-bottom:20px;
-}
+  border:1px solid var(--border);border-radius:28px;padding:36px 32px 32px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;overflow:hidden;}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,.6),rgba(6,182,212,.4),transparent);}
+.sec-banner{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;
+  background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.3);border-radius:14px;
+  margin-bottom:28px;font-size:13px;color:var(--text);line-height:1.55;}
+.sec-banner .icon{font-size:20px;flex-shrink:0;margin-top:1px}.sec-banner b{color:#6ee7b7}
+.recarga-banner{display:none;align-items:center;gap:12px;padding:14px 16px;
+  background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.35);border-radius:14px;margin-bottom:20px;}
 .recarga-banner.show{display:flex}
-.recarga-left{flex:1;min-width:0}
-.recarga-label{
-  font-size:10.5px;font-weight:700;
-  color:var(--muted);letter-spacing:.5px;
-  text-transform:uppercase;margin-bottom:5px;
-}
-.recarga-code{
-  font-family:var(--mono);font-size:16px;font-weight:700;
-  color:var(--accent);letter-spacing:1px;word-break:break-all;
-}
-
-.recarga-missing{
-  display:none;
-  padding:10px 14px;
-  background:rgba(248,113,113,.07);
-  border:1px solid rgba(248,113,113,.25);
-  border-radius:10px;
-  font-size:12px;color:#fca5a5;
-  margin-bottom:20px;
-  text-align:center;
-}
+.recarga-label{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px;}
+.recarga-code{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accent);word-break:break-all;}
+.recarga-missing{display:none;padding:10px 14px;background:rgba(248,113,113,.07);
+  border:1px solid rgba(248,113,113,.25);border-radius:10px;font-size:12px;color:#fca5a5;margin-bottom:20px;text-align:center;}
 .recarga-missing.show{display:block}
-
 .progress-wrap{margin-bottom:32px;}
-.progress-steps{display:flex;align-items:center;justify-content:center;gap:0;position:relative;}
-.step-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
-.step-dot{
-  width:40px;height:40px;border-radius:50%;border:2px solid var(--border2);
-  background:var(--card);display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:700;color:var(--muted);
-  transition:all .4s ease;position:relative;cursor:default;
-}
-.step-dot.active{
-  border-color:var(--primary);background:rgba(124,58,237,.2);color:#fff;
-  box-shadow:0 0 0 4px rgba(124,58,237,.15),0 0 20px rgba(124,58,237,.3);
-  animation:dotPop .3s ease;
-}
+.progress-steps{display:flex;align-items:center;justify-content:center;}
+.step-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1;}
+.step-dot{width:40px;height:40px;border-radius:50%;border:2px solid var(--border2);background:var(--card);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--muted);
+  transition:all .4s ease;position:relative;}
+.step-dot.active{border-color:var(--primary);background:rgba(124,58,237,.2);color:#fff;
+  box-shadow:0 0 0 4px rgba(124,58,237,.15),0 0 20px rgba(124,58,237,.3);animation:dotPop .3s ease;}
 @keyframes dotPop{0%{transform:scale(.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
 .step-dot.done{border-color:var(--success);background:rgba(16,185,129,.2);color:var(--success);}
 .step-dot.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;}
 .step-dot.done .dot-num{display:none}
-.step-label{
-  font-size:10.5px;font-weight:600;color:var(--muted);
-  text-align:center;letter-spacing:.3px;transition:color .3s;
-  white-space:nowrap;max-width:72px;
-}
-.step-dot-wrap.active .step-label{color:var(--primary-light)}
-.step-dot-wrap.done .step-label{color:var(--success)}
+.step-label{font-size:10.5px;font-weight:600;color:var(--muted);text-align:center;white-space:nowrap;max-width:72px;transition:color .3s;}
+.step-dot-wrap.active .step-label{color:var(--primary-light)}.step-dot-wrap.done .step-label{color:var(--success)}
 .step-line{flex:1;height:2px;background:var(--border2);position:relative;overflow:hidden;margin-bottom:22px;min-width:20px;max-width:60px;}
-.step-line-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--primary),var(--accent));transform:scaleX(0);transform-origin:left;transition:transform .5s ease;}
+.step-line-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--primary),var(--accent));
+  transform:scaleX(0);transform-origin:left;transition:transform .5s ease;}
 .step-line.filled .step-line-fill{transform:scaleX(1)}
-
-.steps-outer{position:relative;overflow:hidden;min-height:280px;}
+.steps-outer{position:relative;overflow:hidden;min-height:300px;}
 .step-panel{display:none;animation:panelIn .35s ease both;}
 .step-panel.active{display:block}
 @keyframes panelIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes panelInBack{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 .step-panel.going-back{animation:panelInBack .35s ease both}
-
-.panel-title{
-  font-size:20px;font-weight:800;margin-bottom:6px;
+.panel-title{font-size:20px;font-weight:800;margin-bottom:6px;
   background:linear-gradient(90deg,var(--text),var(--primary-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .panel-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5;}
-
 .method-grid{display:grid;grid-template-columns:1fr;gap:12px;}
-.method-card{
-  display:flex;align-items:center;gap:16px;padding:16px 18px;
-  border-radius:16px;border:2px solid var(--border2);
-  background:rgba(255,255,255,.02);cursor:pointer;
-  transition:all .25s ease;position:relative;overflow:hidden;
-}
-.method-card::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(124,58,237,.07),transparent);opacity:0;transition:opacity .3s;}
+.method-card{display:flex;align-items:center;gap:16px;padding:16px 18px;border-radius:16px;
+  border:2px solid var(--border2);background:rgba(255,255,255,.02);cursor:pointer;
+  transition:all .25s ease;position:relative;overflow:hidden;}
 .method-card:hover{border-color:var(--primary);background:rgba(124,58,237,.06);transform:translateX(4px);}
-.method-card:hover::before{opacity:1}
-.method-card.selected{border-color:var(--primary);background:rgba(124,58,237,.12);box-shadow:0 0 0 1px rgba(124,58,237,.3),0 4px 20px rgba(124,58,237,.15);}
-.method-icon{font-size:28px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(6,182,212,.4));}
-.method-info{flex:1}
+.method-card.selected{border-color:var(--primary);background:rgba(124,58,237,.12);
+  box-shadow:0 0 0 1px rgba(124,58,237,.3),0 4px 20px rgba(124,58,237,.15);}
+.method-icon{font-size:28px;flex-shrink:0}.method-info{flex:1}
 .method-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
 .method-desc{font-size:12px;color:var(--muted);line-height:1.4}
-.method-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;transition:all .25s;}
-.method-card.selected .method-check{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 8px rgba(124,58,237,.5);}
-
-.bank-block{margin-top:20px;padding:18px;border-radius:14px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.25);font-size:14px;line-height:2;display:none;}
-.bank-block.show{display:block}
-.bank-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.method-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;transition:all .25s;}
+.method-card.selected .method-check{background:var(--primary);border-color:var(--primary);color:#fff;}
+.bank-block{margin-top:20px;padding:18px;border-radius:14px;background:rgba(124,58,237,.06);
+  border:1px solid rgba(124,58,237,.25);font-size:14px;line-height:2;display:none;}
+.bank-block.show{display:block}.bank-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .bank-label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.3px;margin-right:2px}
 .bank-val{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600;}
 .copy{cursor:pointer;font-size:13px;margin-left:6px;opacity:.6;transition:all .2s;display:inline-block;}
-.copy:hover{opacity:1;transform:scale(1.3)}
-.copiado{font-size:11px;color:var(--success);margin-left:4px;font-weight:700}
-.bank-note{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);font-size:12px;color:var(--text);line-height:1.5;}
-
+.copy:hover{opacity:1;transform:scale(1.3)}.copiado{font-size:11px;color:var(--success);margin-left:4px;font-weight:700}
+.copy-noemoji{font-size:10px;font-weight:700;color:var(--primary-light);letter-spacing:.3px;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);}
+.bank-note{margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(6,182,212,.08);
+  border:1px solid rgba(6,182,212,.2);font-size:12px;color:var(--text);line-height:1.5;}
 .field{margin-bottom:20px}
 .field-label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
 .input-wrap{position:relative}
 input[type=text],input[type=email],input[type=number]{
-  width:100%;padding:14px 46px 14px 16px;border-radius:12px;
-  border:1.5px solid var(--border2);background:rgba(10,14,39,.8);
-  color:var(--text);font-family:var(--font);font-size:15px;transition:all .3s;
-}
-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,58,237,.12);background:rgba(124,58,237,.04);}
+  width:100%;padding:14px 46px 14px 16px;border-radius:12px;border:1.5px solid var(--border2);
+  background:rgba(10,14,39,.8);color:var(--text);font-family:var(--font);font-size:15px;transition:all .3s;}
+input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,58,237,.12);}
 input::placeholder{color:var(--border2)}
-.i-turtle{position:absolute;right:12px;top:50%;transform:translateY(-50%) scale(0);font-size:19px;opacity:0;transition:all .3s;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 0 6px rgba(124,58,237,.6));}
+.i-turtle{position:absolute;right:12px;top:50%;transform:translateY(-50%) scale(0);
+  font-size:19px;opacity:0;transition:all .3s;pointer-events:auto;cursor:pointer;}
 input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:wiggle 1.2s ease-in-out infinite;}
 @keyframes wiggle{0%,100%{transform:translateY(-50%) scale(1) rotate(-6deg)}50%{transform:translateY(-50%) scale(1) rotate(6deg)}}
 .mxn-hint{margin-top:8px;font-size:13px;color:var(--accent);font-weight:500;}
-
 .checklist-wrap{margin-top:24px;border-radius:14px;border:1px solid var(--border2);overflow:hidden;}
-.checklist-title{padding:12px 16px;background:rgba(124,58,237,.08);border-bottom:1px solid var(--border2);font-size:12px;font-weight:700;color:var(--primary-light);letter-spacing:.4px;text-transform:uppercase;}
-.check-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .2s;user-select:none;}
-.check-item:last-child{border-bottom:none}
-.check-item:hover{background:rgba(124,58,237,.05)}
-.check-item.checked{background:rgba(16,185,129,.04)}
-.check-btn{width:26px;height:26px;flex-shrink:0;border-radius:8px;border:2px solid var(--border2);background:transparent;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;transition:all .25s ease;color:transparent;}
-.check-item.checked .check-btn{background:var(--success);border-color:var(--success);color:#fff;box-shadow:0 0 12px rgba(16,185,129,.4);animation:checkPop .3s ease;}
+.checklist-title{padding:12px 16px;background:rgba(124,58,237,.08);border-bottom:1px solid var(--border2);
+  font-size:12px;font-weight:700;color:var(--primary-light);letter-spacing:.4px;text-transform:uppercase;}
+.check-item{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .2s;user-select:none;}
+.check-item:last-child{border-bottom:none}.check-item:hover{background:rgba(124,58,237,.05)}.check-item.checked{background:rgba(16,185,129,.04)}
+.check-btn{width:26px;height:26px;flex-shrink:0;border-radius:8px;border:2px solid var(--border2);
+  background:transparent;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;
+  transition:all .25s ease;color:transparent;}
+.check-item.checked .check-btn{background:var(--success);border-color:var(--success);color:#fff;animation:checkPop .3s ease;}
 @keyframes checkPop{0%{transform:scale(.7)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
-.check-text{flex:1;font-size:14px;font-weight:500;color:var(--text);line-height:1.4;transition:color .25s;}
+.check-text{flex:1;font-size:14px;font-weight:500;color:var(--text);line-height:1.4;}
 .check-item.checked .check-text{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(16,185,129,.5);}
-.check-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(124,58,237,.15);color:var(--primary-light);border:1px solid rgba(124,58,237,.2);white-space:nowrap;flex-shrink:0;}
+.check-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;
+  background:rgba(124,58,237,.15);color:var(--primary-light);border:1px solid rgba(124,58,237,.2);white-space:nowrap;flex-shrink:0;}
 .check-item.checked .check-badge{background:rgba(16,185,129,.15);color:var(--success);border-color:rgba(16,185,129,.2);}
-.checklist-footer{padding:12px 16px;background:rgba(6,182,212,.04);border-top:1px solid var(--border2);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.checklist-footer{padding:12px 16px;background:rgba(6,182,212,.04);border-top:1px solid var(--border2);
+  font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;}
 .checklist-progress{flex:1;height:4px;border-radius:2px;background:var(--border2);overflow:hidden;}
 .checklist-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--success));border-radius:2px;transition:width .4s ease;}
 .checklist-count{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;}
-
-.upload-zone{border:2px dashed var(--border2);border-radius:16px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;position:relative;background:rgba(255,255,255,.01);}
+.upload-zone{border:2px dashed var(--border2);border-radius:16px;padding:32px 20px;text-align:center;
+  cursor:pointer;transition:all .3s;position:relative;background:rgba(255,255,255,.01);}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--primary);background:rgba(124,58,237,.06);}
 .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
 .upload-icon{font-size:40px;margin-bottom:10px;display:block}
-.upload-title{font-size:15px;font-weight:700;margin-bottom:4px}
-.upload-sub{font-size:12px;color:var(--muted)}
-.upload-preview{display:none;margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border2);max-height:180px;}
-.upload-preview img{width:100%;height:180px;object-fit:contain;background:#000}
+.upload-title{font-size:15px;font-weight:700;margin-bottom:4px}.upload-sub{font-size:12px;color:var(--muted)}
+.upload-preview{display:none;margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid var(--border2);}
+.upload-preview img{width:100%;max-height:180px;object-fit:contain;background:#000}
 .upload-name{margin-top:10px;font-size:12px;color:var(--success);font-weight:600;display:none;}
-
 .summary{border-radius:16px;border:1px solid var(--border2);overflow:hidden;}
-.summary-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px;}
-.summary-row:last-child{border-bottom:none}
-.sum-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.summary-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;
+  border-bottom:1px solid rgba(255,255,255,.04);font-size:14px;}
+.summary-row:last-child{border-bottom:none}.sum-icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .sum-key{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px}
-.sum-val{font-weight:600;color:var(--text);font-family:var(--mono);font-size:13px}
+.sum-val{font-weight:600;color:var(--text);font-family:var(--mono);font-size:13px;word-break:break-all;}
 .sum-img{width:100%;border-radius:10px;max-height:140px;object-fit:contain;background:rgba(0,0,0,.3);margin-top:8px;}
-
 .nav-btns{display:flex;gap:12px;margin-top:28px;}
-.btn-back{flex:1;padding:15px;border:1.5px solid var(--border2);border-radius:12px;background:transparent;color:var(--muted);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-back{flex:1;padding:15px;border:1.5px solid var(--border2);border-radius:12px;background:transparent;
+  color:var(--muted);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;
+  transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .btn-back:hover{border-color:var(--primary);color:var(--primary-light)}
-.btn-next{flex:2;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-family:var(--font);font-size:16px;font-weight:800;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;}
-.btn-next::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .3s;}
-.btn-next:hover::before{background:rgba(255,255,255,.08)}
+.btn-next{flex:2;padding:15px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
+  font-family:var(--font);font-size:16px;font-weight:800;cursor:pointer;
+  transition:all .3s;box-shadow:0 4px 20px rgba(124,58,237,.4);
+  display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;}
 .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.55)}
 .btn-next:active{transform:translateY(0)}
 .btn-next:disabled{background:linear-gradient(135deg,#1e1e2e,#1a2535);cursor:not-allowed;transform:none;box-shadow:none;color:var(--muted);}
-.btn-next.sending{background:linear-gradient(135deg,#4a2090,#0a8499);cursor:not-allowed;transform:none!important;}
-.btn-next.done{background:linear-gradient(135deg,#065f46,#0d9488);cursor:not-allowed;transform:none!important;box-shadow:0 4px 20px rgba(16,185,129,.35);}
-
-.spinner{width:19px;height:19px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.btn-next.sending{background:linear-gradient(135deg,#4a2090,#0a8499);cursor:not-allowed;}
+.btn-next.done{background:linear-gradient(135deg,#065f46,#0d9488);cursor:not-allowed;}
+.spinner{width:19px;height:19px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.error-box{display:none;padding:12px 16px;border-radius:11px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);color:#f87171;font-size:13px;font-weight:600;margin-bottom:16px;text-align:center;}
+.error-box{display:none;padding:12px 16px;border-radius:11px;background:rgba(248,113,113,.08);
+  border:1px solid rgba(248,113,113,.3);color:#f87171;font-size:13px;font-weight:600;margin-bottom:16px;text-align:center;}
 .error-box.show{display:block}
-
-.success-screen{display:none;text-align:center;padding:16px 0;}
-.success-screen.show{display:block}
+.success-screen{display:none;text-align:center;padding:16px 0;}.success-screen.show{display:block}
 .success-icon{font-size:64px;margin-bottom:16px;animation:popIn .5s ease both}
 @keyframes popIn{from{transform:scale(0)}80%{transform:scale(1.2)}to{transform:scale(1)}}
 .success-title{font-size:22px;font-weight:900;color:var(--success);margin-bottom:8px}
 .success-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-.success-warn{padding:14px 16px;border-radius:12px;background:rgba(124,58,237,.08);border:1px solid var(--primary);font-size:13px;color:var(--text);line-height:1.7;text-align:left;margin-bottom:16px;}
-.countdown-txt{font-size:13px;color:var(--muted)}
-.countdown-txt b{color:var(--accent)}
-
-@media (max-width:480px){
-  .card{border-radius:20px;padding:24px 18px 24px;}
-  .logo{font-size:21px;margin-bottom:20px;letter-spacing:-.5px;}
-  .logo-turtle{font-size:23px}
-  .sec-banner{padding:12px 13px;font-size:12px;gap:10px;margin-bottom:20px;}
-  .sec-banner .icon{font-size:17px}
-  .recarga-banner{flex-direction:column;align-items:flex-start;gap:8px;}
-  .recarga-code{font-size:14px;}
-  .recarga-copy{width:100%;text-align:center;}
-  .progress-wrap{margin-bottom:24px}
+.success-warn{padding:14px 16px;border-radius:12px;background:rgba(124,58,237,.08);border:1px solid var(--primary);
+  font-size:13px;color:var(--text);line-height:1.7;text-align:left;margin-bottom:16px;}
+.countdown-txt{font-size:13px;color:var(--muted)}.countdown-txt b{color:var(--accent)}
+.panchita{position:fixed;bottom:20px;right:20px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
+  padding:14px 18px;border-radius:16px;font-size:13.5px;font-weight:600;
+  transform:translateY(130px);opacity:0;transition:all .4s ease;z-index:9999;max-width:270px;line-height:1.5;}
+.panchita.show{transform:translateY(0);opacity:1}
+.footer{margin-top:22px;font-size:11.5px;color:var(--muted);text-align:center;}
+.footer-copy{line-height:1.7}
+.footer-whatsapp{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:9px 14px;
+  border-radius:999px;border:1px solid rgba(251,191,36,.5);background:linear-gradient(135deg,#f59e0b,#f97316);
+  color:#1b1200;text-decoration:none;font-size:12px;font-weight:900;
+  box-shadow:0 8px 18px rgba(249,115,22,.26);transition:transform .25s;}
+.footer-whatsapp:hover{transform:translateY(-2px);}
+@media(max-width:480px){
+  .card{border-radius:20px;padding:24px 18px;}
   .step-dot{width:32px;height:32px;font-size:13px}
-  .step-dot.done::after{font-size:13px}
-  .step-label{font-size:9px;max-width:56px;color:transparent;transition:color .3s;}
-  .step-dot-wrap.active .step-label{color:var(--primary-light)}
-  .step-dot-wrap.done .step-label{color:var(--success)}
+  .step-label{font-size:9px;max-width:56px;color:transparent;}
+  .step-dot-wrap.active .step-label{color:var(--primary-light)}.step-dot-wrap.done .step-label{color:var(--success)}
   .step-line{min-width:12px;max-width:40px}
-  .panel-title{font-size:18px}
-  .panel-sub{font-size:12px;margin-bottom:18px}
-  .method-card{padding:13px 14px;gap:12px}
-  .method-icon{font-size:24px}
-  .method-name{font-size:14px}
-  .method-desc{font-size:11px}
-  .method-check{width:20px;height:20px;font-size:11px}
-  .bank-block{padding:14px;font-size:13px;line-height:1.9}
   .bank-val{font-size:12px;word-break:break-all;}
-  .bank-label{font-size:11px}
-  .bank-note{font-size:11px}
-  input[type=text],input[type=email],input[type=number]{font-size:16px;padding:13px 44px 13px 14px;}
-  .field-label{font-size:11.5px}
-  .mxn-hint{font-size:12px}
-  .check-text{font-size:13px}
-  .check-badge{font-size:10px;padding:2px 6px}
-  .upload-zone{padding:24px 14px}
-  .upload-icon{font-size:32px}
-  .upload-title{font-size:14px}
-  .upload-sub{font-size:11px}
-  .sum-val{font-size:12px;word-break:break-all;}
-  .sum-key{font-size:10px}
-  .summary-row{padding:12px 14px;gap:10px}
-  .nav-btns{margin-top:22px;gap:10px}
-  .btn-back{font-size:13px;padding:13px 10px;flex:1;}
-  .btn-next{font-size:14px;padding:14px 10px;flex:2;}
-  .success-icon{font-size:52px}
-  .success-title{font-size:19px}
-  .success-sub{font-size:13px}
-  .success-warn{font-size:12px;padding:12px 13px}
-  .countdown-txt{font-size:12px}
-  .panchita{bottom:12px;right:12px;left:12px;max-width:100%;font-size:13px;padding:12px 15px;}
-  .footer-whatsapp{width:auto;}
-}
-@media (min-width:481px) and (max-width:680px){
-  .card{padding:28px 24px}
-  .bank-val{font-size:12.5px;word-break:break-all}
-  .sum-val{word-break:break-all}
   input[type=text],input[type=email],input[type=number]{font-size:16px}
 }
-@media (min-width:681px){
-  .wrapper{padding:40px 24px 60px}
-  .card{padding:40px 36px 36px}
-}
-
-.panchita{
-  position:fixed;bottom:20px;right:20px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;padding:14px 18px;border-radius:16px;
-  box-shadow:0 8px 24px rgba(124,58,237,.45);
-  font-size:13.5px;font-weight:600;
-  transform:translateY(130px);opacity:0;
-  transition:all .4s ease;z-index:9999;max-width:270px;line-height:1.5;
-}
-.panchita.show{transform:translateY(0);opacity:1}
-.footer{
-  margin-top:22px;
-  font-size:11.5px;
-  color:var(--muted);
-  letter-spacing:.3px;
-  text-align:center;
-}
-.footer-copy{line-height:1.7}
-.footer-whatsapp{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  max-width:100%;
-  margin-top:12px;
-  padding:9px 14px;
-  border-radius:999px;
-  border:1px solid rgba(251,191,36,.5);
-  background:linear-gradient(135deg,#f59e0b,#f97316);
-  color:#1b1200;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:900;
-  box-shadow:0 8px 18px rgba(249,115,22,.26);
-  transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
-}
-.footer-whatsapp:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 24px rgba(249,115,22,.34);
-  filter:saturate(1.08);
-}
-.footer-whatsapp:active{transform:translateY(0)}
 </style>
 </head>
 <body>
-
 <div class="turtle-float" id="turtleFloat">🐢</div>
-
 <div class="wrapper">
-
-  <div class="logo">
-    WSSERVERMX
-    <span class="logo-turtle">🐢</span>
-  </div>
-
+  <div class="logo">WSSERVERMX<span class="logo-turtle">🐢</span></div>
   <div class="card">
-
     <div class="sec-banner">
       <span class="icon">🔒</span>
-      <span><b>PAGO 100% SEGURO</b> — Jamás te pediremos datos de tu tarjeta.<br>
-      Todo lo haces tú desde la app de tu banco.</span>
+      <span><b>PAGO 100% SEGURO</b> — Jamás te pediremos datos de tu tarjeta. Todo lo haces tú desde la app de tu banco.</span>
     </div>
-
     <div class="recarga-banner" id="recargaBanner">
-      <div class="recarga-left">
-        <div class="recarga-label">🎟️ Código de recarga</div>
-        <div class="recarga-code" id="recargaCode">—</div>
-      </div>
+      <div><div class="recarga-label">🎟️ Código de recarga</div><div class="recarga-code" id="recargaCode">—</div></div>
     </div>
-    <div class="recarga-missing" id="recargaMissing">
-      ⚠️ No se detectó un código de recarga en el enlace. Asegúrate de haber abierto esta página desde el botón de pago correcto.
-    </div>
+    <div class="recarga-missing" id="recargaMissing">⚠️ No se detectó un código de recarga en el enlace. Asegúrate de haber abierto esta página desde el botón de pago correcto.</div>
 
     <div class="progress-wrap">
       <div class="progress-steps" id="progressSteps">
-
-        <div class="step-dot-wrap active" data-step="0">
-          <div class="step-dot active" id="dot0"><span class="dot-num">1</span></div>
-          <div class="step-label">Método</div>
-        </div>
+        <div class="step-dot-wrap active" data-step="0"><div class="step-dot active" id="dot0"><span class="dot-num">1</span></div><div class="step-label">Método</div></div>
         <div class="step-line" id="line0"><div class="step-line-fill"></div></div>
-
-        <div class="step-dot-wrap" data-step="1">
-          <div class="step-dot" id="dot1"><span class="dot-num">2</span></div>
-          <div class="step-label">Tus datos</div>
-        </div>
+        <div class="step-dot-wrap" data-step="1"><div class="step-dot" id="dot1"><span class="dot-num">2</span></div><div class="step-label">Tus datos</div></div>
         <div class="step-line" id="line1"><div class="step-line-fill"></div></div>
-
-        <div class="step-dot-wrap" data-step="2">
-          <div class="step-dot" id="dot2"><span class="dot-num">3</span></div>
-          <div class="step-label">Comprobante</div>
-        </div>
+        <div class="step-dot-wrap" data-step="2"><div class="step-dot" id="dot2"><span class="dot-num">3</span></div><div class="step-label">Comprobante</div></div>
         <div class="step-line" id="line2"><div class="step-line-fill"></div></div>
-
-        <div class="step-dot-wrap" data-step="3">
-          <div class="step-dot" id="dot3"><span class="dot-num">4</span></div>
-          <div class="step-label">Confirmar</div>
-        </div>
-
+        <div class="step-dot-wrap" data-step="3"><div class="step-dot" id="dot3"><span class="dot-num">4</span></div><div class="step-label">Confirmar</div></div>
       </div>
     </div>
 
     <div class="error-box" id="errorBox"></div>
-
     <div class="steps-outer" id="stepsOuter">
 
       <div class="step-panel active" id="panel0">
         <div class="panel-title">¿Qué método de pago prefieres?</div>
         <div class="panel-sub">Elige el método con el que realizarás tu pago.</div>
-
         <div class="method-grid">
           <div class="method-card" data-method="binance" onclick="selectMethod(this)">
             <span class="method-icon">🟣</span>
@@ -488,42 +252,33 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
           <div class="method-card" data-method="transferencia" onclick="selectMethod(this)">
             <span class="method-icon">🏦</span>
             <div class="method-info">
-              <div class="method-name">Transferencia bancaria</div>
-              <div class="method-desc">CLABE · Nu México · Tiempo varía según tu banco</div>
+              <div class="method-name">Transferencia Bancaria MX</div>
+              <div class="method-desc">KLAR · SOLO MÉXICO · Tiempo varía según el banco emisor</div>
             </div>
             <div class="method-check">✓</div>
           </div>
           <div class="method-card" data-method="oxxo" onclick="selectMethod(this)">
             <span class="method-icon">🏪</span>
             <div class="method-info">
-              <div class="method-name">OXXO Pay</div>
-              <div class="method-desc">Pago en efectivo · Puede tardar hasta 24 h</div>
+              <div class="method-name">OXXO PAY</div>
+              <div class="method-desc">Pago en efectivo en oxxo o cualquier tienda de conveniencia.</div>
             </div>
             <div class="method-check">✓</div>
-          </div>
-        </div>
-
+          </div></div>
         <div class="bank-block" id="bankBlock"></div>
-
-        <div class="nav-btns">
-          <button class="btn-next" id="btnStep0Next" onclick="goNext()" disabled>
-            Siguiente →
-          </button>
-        </div>
+        <div class="nav-btns"><button class="btn-next" id="btnStep0Next" onclick="goNext()" disabled>Siguiente →</button></div>
       </div>
 
       <div class="step-panel" id="panel1">
         <div class="panel-title">Tus datos</div>
         <div class="panel-sub">Ingresa tu correo y el monto que pagaste.</div>
-
         <div class="field">
-          <label class="field-label">Correo registrado en el server</label>
+          <label class="field-label">Correo registrado en nuestro server</label>
           <div class="input-wrap">
             <input type="email" id="fEmail" placeholder="tucorreo@ejemplo.com" autocomplete="email">
             <span class="i-turtle" onclick="showPanchita()">🐢</span>
           </div>
         </div>
-
         <div class="field" id="fieldBinanceUser" style="display:none">
           <label class="field-label">Tu nombre en Binance</label>
           <div class="input-wrap">
@@ -531,7 +286,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
             <span class="i-turtle" onclick="showPanchita()">🐢</span>
           </div>
         </div>
-
         <div class="field">
           <label class="field-label" id="montoLabel">Monto pagado (USD)</label>
           <div class="input-wrap">
@@ -540,7 +294,6 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
           </div>
           <div class="mxn-hint" id="mxnHint">Equivalente: $0 MXN</div>
         </div>
-
         <div class="checklist-wrap">
           <div class="checklist-title">✅ Confirma antes de continuar</div>
           <div class="check-item" id="ci0" onclick="toggleCheck(0)">
@@ -554,13 +307,10 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
             <div class="check-badge" id="cbadge1">Pendiente</div>
           </div>
           <div class="checklist-footer">
-            <div class="checklist-progress">
-              <div class="checklist-progress-fill" id="checkProgressFill" style="width:0%"></div>
-            </div>
+            <div class="checklist-progress"><div class="checklist-progress-fill" id="checkProgressFill" style="width:0%"></div></div>
             <div class="checklist-count" id="checkCount">0 / 2</div>
           </div>
         </div>
-
         <div class="nav-btns">
           <button class="btn-back" onclick="goBack()">← Atrás</button>
           <button class="btn-next" onclick="goNext()">Siguiente →</button>
@@ -570,18 +320,14 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
       <div class="step-panel" id="panel2">
         <div class="panel-title">Sube tu comprobante</div>
         <div class="panel-sub">Adjunta la captura o foto de tu comprobante de pago.</div>
-
         <div class="upload-zone" id="uploadZone">
           <input type="file" id="fFile" accept="image/*" onchange="onFileChange(this)">
           <span class="upload-icon">📎</span>
           <div class="upload-title">Toca para subir tu comprobante</div>
           <div class="upload-sub">JPG, PNG, WEBP · Máximo 10 MB</div>
         </div>
-        <div class="upload-preview" id="uploadPreview">
-          <img id="previewImg" src="" alt="Vista previa">
-        </div>
+        <div class="upload-preview" id="uploadPreview"><img id="previewImg" src="" alt="Vista previa"></div>
         <div class="upload-name" id="uploadName"></div>
-
         <div class="nav-btns">
           <button class="btn-back" onclick="goBack()">← Atrás</button>
           <button class="btn-next" id="btnStep2Next" onclick="goNext()" disabled>Siguiente →</button>
@@ -591,65 +337,48 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
       <div class="step-panel" id="panel3">
         <div class="panel-title">Revisa y envía</div>
         <div class="panel-sub">Confirma que todo esté correcto antes de enviar.</div>
-
         <div class="summary" id="summaryBox"></div>
-
         <div class="nav-btns" id="sendNavBtns">
           <button class="btn-back" id="btnBackStep3" onclick="goBack()">← Atrás</button>
-          <div style="flex:2;display:flex;flex-direction:column;gap:0">
-            <button class="btn-next" id="btnSend" onclick="sendForm()">
-              <span id="sendIcon">📤</span>
-              <span id="sendText">Enviar comprobante</span>
-            </button>
-          </div>
+          <div style="flex:2"><button class="btn-next" id="btnSend" onclick="sendForm()">
+            <span id="sendIcon">📤</span><span id="sendText">Enviar comprobante</span>
+          </button></div>
         </div>
-
         <div class="success-screen" id="successScreen">
           <div class="success-icon">✅</div>
           <div class="success-title">¡Comprobante enviado!</div>
           <div class="success-sub">Lo recibimos correctamente. En breve procesaremos tu pago.</div>
-          <div class="success-warn">
-            ⚠️ <b>IMPORTANTE:</b> No envíes el comprobante más de una vez.<br>
-            Los envíos duplicados pueden atorar tu solicitud y puede tardar en resolverse <b>hasta 4 horas</b>.
-          </div>
-          <div class="countdown-txt">Redirigiendo en <b id="countNum">20</b> segundos…</div>
+          <div class="success-warn">⚠️ IMPORTANTE: No envíes el comprobante más de una vez. Los envíos duplicados pueden atorar tu solicitud y puede tardar en resolverse hasta 4 horas.</div>
+          <div class="countdown-txt">Redirigiendo en <b id="countNum">30</b> segundos…</div>
         </div>
       </div>
 
     </div>
-
   </div>
-
   <div class="footer">
-    <div class="footer-copy">BY WSSISTEMAS © 2026<br>
-      ¿Te interesa un sistema igual?</div>
-    <a
-      class="footer-whatsapp"
-      href="https://wa.me/526566600420?text=Hola%2C%20me%20interesa%20su%20sistema%20de%20pago.%20Me%20das%20información%20por%20favor?%3F"
-      target="_blank"
-      rel="noopener noreferrer"
-    >Pedir info</a>
+    <div class="footer-copy">BY WSSISTEMAS © 2026<br>¿Te interesa un sistema igual?</div>
+    <a class="footer-whatsapp" href="https://api.whatsapp.com/send/?phone=526566600420&text=Hola%2C+me+interesa+su+sistema+de+pago+para+mi+web%2C+puede+darme+m%C3%A1s+informaci%C3%B3n+por+favor%3F" target="_blank" rel="noopener noreferrer">Pedir info</a>
   </div>
 </div>
-
-<div class="panchita" id="panchita">
-  🐢 ¡Hola! Soy Panchita, la mascota de WS. Tengo 2 añitos y soy más rápida de lo que crees 💚
-</div>
+<div class="panchita" id="panchita">🐢 ¡Hola! Soy Panchita, la mascota de WS. Tengo 2 añitos y soy más rápida de lo que crees 💚</div>
 
 <script>
-const RATE      = 20;
-const MIN_USD   = 3;
-const BOT_TOKEN = "8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0";
-const CHAT_ID   = "8346464055";
+const RATE = 20;
+const CURR_CODE = 'MXN';
+const MIN_USD = 3;
+const BOT_TOKEN = '8580941597:AAHKyc0zS6yUUWhkDjJq77sCwcJI0hSuCg0';
+const CHAT_ID = '8346464055';
+const LABEL_MONTO = 'Monto pagado (USD)';
+const LABEL_MONTO_BINANCE = 'MONTO PAGADO (USDT)';
 
-let currentStep    = 0;
+let currentStep = 0;
 let selectedMethod = null;
-let isSending      = false;
-let alreadySent    = false;
-let checks         = [false, false];
+let isSending = false;
+let alreadySent = false;
+let checks = [false, false];
+let savedFileData = null; // FIX: persist file across panel switches
 
 const codigoRecarga = new URLSearchParams(window.location.search).get('recarga') || '';
-
 if(codigoRecarga){
   document.getElementById('recargaCode').textContent = codigoRecarga;
   document.getElementById('recargaBanner').classList.add('show');
@@ -658,140 +387,99 @@ if(codigoRecarga){
 }
 
 for(let i=0;i<22;i++){
-  const s = document.createElement('div');
-  s.className = 'sparkle';
-  s.style.left = Math.random()*100+'%';
-  s.style.top  = Math.random()*100+'%';
-  s.style.animationDelay = Math.random()*4+'s';
-  document.body.appendChild(s);
+  const s=document.createElement('div');s.className='sparkle';
+  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+  s.style.animationDelay=Math.random()*4+'s';document.body.appendChild(s);
 }
 
 const tf = document.getElementById('turtleFloat');
 let turtleGone = false;
-tf.addEventListener('click', () => {
-  if(turtleGone) return;
-  turtleGone = true;
-  const l = tf.offsetLeft, t = tf.offsetTop;
-  tf.style.left = l+'px'; tf.style.top = t+'px';
-  tf.classList.add('bye');
-  setTimeout(()=>tf.remove(), 2800);
+tf.addEventListener('click',()=>{
+  if(turtleGone)return;turtleGone=true;
+  const l=tf.offsetLeft,t=tf.offsetTop;
+  tf.style.left=l+'px';tf.style.top=t+'px';
+  tf.classList.add('bye');setTimeout(()=>tf.remove(),2800);
 });
 
 function showPanchita(){
-  const p = document.getElementById('panchita');
-  p.classList.add('show');
-  setTimeout(()=>p.classList.remove('show'), 8000);
+  const p=document.getElementById('panchita');
+  p.classList.add('show');setTimeout(()=>p.classList.remove('show'),8000);
 }
 
 function toggleCheck(i){
-  checks[i] = !checks[i];
-  const item  = document.getElementById('ci'+i);
-  const badge = document.getElementById('cbadge'+i);
-  if(checks[i]){
-    item.classList.add('checked');
-    badge.textContent = '✓ Listo';
-  } else {
-    item.classList.remove('checked');
-    badge.textContent = 'Pendiente';
-  }
-  const done = checks.filter(Boolean).length;
-  document.getElementById('checkProgressFill').style.width = (done/2*100)+'%';
-  document.getElementById('checkCount').textContent = done+' / 2';
+  checks[i]=!checks[i];
+  const item=document.getElementById('ci'+i),badge=document.getElementById('cbadge'+i);
+  if(checks[i]){item.classList.add('checked');badge.textContent='✓ Listo';}
+  else{item.classList.remove('checked');badge.textContent='Pendiente';}
+  const done=checks.filter(Boolean).length;
+  document.getElementById('checkProgressFill').style.width=(done/2*100)+'%';
+  document.getElementById('checkCount').textContent=done+' / 2';
 }
 
 const bankData = {
-  binance:{html:`
-    <div class="bank-row">🆔 <span class="bank-label">ID BINANCE</span>
-      <span class="bank-val">1136518378</span>
-      <span class="copy" onclick="copiar(this,'1136518378')">📋</span>
-    </div>
-    <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
-      <span class="bank-val">WS SERVER MX</span>
-      <span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span>
-    </div>
-    <div class="bank-row">💱 <span class="bank-label">MONEDA</span>
-      <span class="bank-val">USDT / TETHER</span>
-    </div>`},
-  transferencia:{html:`
-    <div class="bank-row">🏛 <span class="bank-label">BANCO</span>
-      <span class="bank-val">KLAR</span>
-      <span class="copy" onclick="copiar(this,'KLAR')">📋</span>
-    </div>
-    <div class="bank-row">💳 <span class="bank-label">CLABE</span>
-      <span class="bank-val">661180002906022821</span>
-      <span class="copy" onclick="copiar(this,'661180002906022821')">📋</span>
-    </div>
-    <div class="bank-row">👤 <span class="bank-label">NOMBRE</span>
-      <span class="bank-val">CHRISTIAN QUIÑONEZ</span>
-      <span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span>
-    </div>
-    <div class="bank-note">⏱️ El tiempo de reflejo depende de tu banco.</div>`},
-  oxxo:{html:`
-    <div class="bank-row">💳 <span class="bank-label">NÚMERO</span>
-      <span class="bank-val">5101 2523 9079 9774</span>
-      <span class="copy" onclick="copiar(this,'5101252390799774')">📋</span>
-    </div>
-    <div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span>
-      <span class="bank-val">1 USD = $20 MXN</span>
-    </div>
-    <div class="bank-note">⚠️ OXXO cobra ~$12–$15 de comisión. Inclúyela en tu pago.<br>🕐 Puede tardar hasta 24 h en reflejarse.</div>`}
+  "binance":{html:`<div class="bank-row">🆔 <span class="bank-label">ID BINANCE</span><span class="bank-val">1136518378</span><span class="copy" onclick="copiar(this,'1136518378')">📋</span></div>
+<div class="bank-row">👤 <span class="bank-label">NOMBRE</span><span class="bank-val">WS SERVER MX</span><span class="copy" onclick="copiar(this,'WS SERVER MX')">📋</span></div>
+<div class="bank-row">💱 <span class="bank-label">MONEDA</span><span class="bank-val">USDT / TETHER</span><span class="copy" onclick="copiar(this,'USDT / TETHER')">📋</span></div>
+`},
+  "transferencia":{html:`<div class="bank-row">🏛 <span class="bank-label">BANCO</span><span class="bank-val">KLAR</span><span class="copy" onclick="copiar(this,'KLAR')">📋</span></div>
+<div class="bank-row">💳 <span class="bank-label">CLABE</span><span class="bank-val">661180002906022821</span><span class="copy" onclick="copiar(this,'661180002906022821')">📋</span></div>
+<div class="bank-row">👤 <span class="bank-label">NOMBRE</span><span class="bank-val">CHRISTIAN QUIÑONEZ</span><span class="copy" onclick="copiar(this,'CHRISTIAN QUIÑONEZ')">📋</span></div>
+<div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span><span class="bank-val">1 USD = 20 MXN</span><span class="copy" onclick="copiar(this,'1 USD = 20 MXN')">📋</span></div>
+<div class="bank-row">📌 <span class="bank-label">ADVERTENCIA:</span><span class="bank-val">Coloca SOLO tu nombre en el concepto de pago o podría tardar hasta 24 horas en reflejarse.</span></div>
+<div class="bank-note">El tiempo de reflejo depende de lo que tarde en liberar el pago tu banco 🕐</div>`},
+  "oxxo":{html:`<div class="bank-row">💳 <span class="bank-label">Número de tarjeta</span><span class="bank-val">5101 2523 9079 9774</span><span class="copy" onclick="copiar(this,'5101 2523 9079 9774')">📋</span></div>
+<div class="bank-row">💵 <span class="bank-label">TIPO DE CAMBIO</span><span class="bank-val">1 USD = 20 MXN</span><span class="copy" onclick="copiar(this,'1 USD = 20 MXN')">📋</span></div>
+<div class="bank-note">🕐 Algunos pagos pueden tardar hasta 24 HRS en reflejarse.</div>`}
 };
 
 function selectMethod(card){
   document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
-  selectedMethod = card.dataset.method;
-  const bb = document.getElementById('bankBlock');
-  bb.innerHTML = bankData[selectedMethod].html;
+  selectedMethod=card.dataset.method;
+  const bb=document.getElementById('bankBlock');
+  if(bankData[selectedMethod]) bb.innerHTML=bankData[selectedMethod].html;
   bb.classList.add('show');
-  const isBinance = selectedMethod === 'binance';
-  document.getElementById('montoLabel').textContent = isBinance ? 'MONTO PAGADO (USDT)' : 'MONTO PAGADO (USD)';
-  document.getElementById('mxnHint').style.display = isBinance ? 'none' : 'block';
-  document.getElementById('btnStep0Next').disabled = false;
+  const isBinance=(selectedMethod==='binance');
+  document.getElementById('montoLabel').textContent=isBinance?LABEL_MONTO_BINANCE:LABEL_MONTO;
+  document.getElementById('mxnHint').style.display=isBinance?'none':'block';
+  document.getElementById('btnStep0Next').disabled=false;
 }
 
-document.getElementById('fUsd').addEventListener('input', function(){
-  const v = parseFloat(this.value)||0;
-  document.getElementById('mxnHint').textContent = `Equivalente: $${(v*RATE).toFixed(2)} MXN`;
+document.getElementById('fUsd').addEventListener('input',function(){
+  const v=parseFloat(this.value)||0;
+  document.getElementById('mxnHint').textContent='Equivalente: $'+(v*RATE).toFixed(2)+' '+CURR_CODE;
 });
 
 function validateStep(n){
-  const err = document.getElementById('errorBox');
-  err.className = 'error-box'; err.textContent = '';
-  if(n === 0){
-    if(!selectedMethod){ showErr('⚠️ Selecciona un método de pago'); return false; }
+  const err=document.getElementById('errorBox');
+  err.className='error-box';err.textContent='';
+  if(n===0){if(!selectedMethod){showErr('⚠️ Selecciona un método de pago');return false;}}
+  if(n===1){
+    const email=document.getElementById('fEmail').value.trim();
+    if(!email||!email.includes('@')){showErr('⚠️ Ingresa un correo válido');return false;}
+    const usdVal=parseFloat(document.getElementById('fUsd').value);
+    if(!usdVal||usdVal<MIN_USD){showErr('⚠️ El monto mínimo es $'+MIN_USD+' USD');return false;}
   }
-  if(n === 1){
-    const email = document.getElementById('fEmail').value.trim();
-    if(!email || !email.includes('@')){ showErr('⚠️ Ingresa un correo válido'); return false; }
-    if(selectedMethod==='binance' && !document.getElementById('fBinanceUser').value.trim()){
-      showErr('⚠️ Ingresa tu nombre en Binance'); return false;
-    }
-    const usdVal = parseFloat(document.getElementById('fUsd').value);
-    if(!usdVal || usdVal < MIN_USD){ showErr('⚠️ El monto mínimo es $3 USD'); return false; }
-  }
-  if(n === 2){
-    if(!document.getElementById('fFile').files.length){
-      showErr('⚠️ Sube una imagen del comprobante'); return false;
-    }
+  if(n===2){
+    if(!savedFileData){showErr('⚠️ Sube una imagen del comprobante');return false;}
   }
   return true;
 }
 
 function showErr(msg){
-  const e = document.getElementById('errorBox');
-  e.textContent = msg; e.classList.add('show');
+  const e=document.getElementById('errorBox');
+  e.textContent=msg;e.classList.add('show');
   e.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
 function goNext(){
-  if(!validateStep(currentStep)) return;
+  if(!validateStep(currentStep))return;
   clearError();
-  if(currentStep === 2) buildSummary();
-  const from = document.getElementById(`panel${currentStep}`);
+  if(currentStep===2)buildSummary();
+  const from=document.getElementById('panel'+currentStep);
   currentStep++;
-  const to = document.getElementById(`panel${currentStep}`);
-  from.style.display = 'none';
+  const to=document.getElementById('panel'+currentStep);
+  from.style.display='none';
   to.classList.remove('going-back');
   to.classList.add('active');
   updateProgress();
@@ -800,187 +488,128 @@ function goNext(){
 
 function goBack(){
   clearError();
-  const from = document.getElementById(`panel${currentStep}`);
-  from.classList.remove('active');
-  from.style.display = 'none';
+  const from=document.getElementById('panel'+currentStep);
+  from.classList.remove('active');from.style.display='none';
   currentStep--;
-  const to = document.getElementById(`panel${currentStep}`);
-  to.classList.add('going-back');
-  to.classList.add('active');
   for(let i=0;i<=3;i++){
-    const p = document.getElementById(`panel${i}`);
-    if(i === currentStep){ p.classList.add('active'); p.style.display=''; }
-    else { p.classList.remove('active'); }
+    const p=document.getElementById('panel'+i);
+    if(i===currentStep){p.classList.add('going-back','active');p.style.display='';}
+    else p.classList.remove('active');
   }
   updateProgress();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function clearError(){
-  const e = document.getElementById('errorBox');
-  e.className = 'error-box'; e.textContent = '';
+  const e=document.getElementById('errorBox');e.className='error-box';e.textContent='';
 }
 
 function updateProgress(){
   for(let i=0;i<=3;i++){
-    const wrap = document.querySelector(`.step-dot-wrap[data-step="${i}"]`);
-    const dot  = document.getElementById(`dot${i}`);
-    wrap.classList.remove('active','done');
-    dot.classList.remove('active','done');
-    if(i < currentStep){ wrap.classList.add('done'); dot.classList.add('done'); }
-    else if(i === currentStep){ wrap.classList.add('active'); dot.classList.add('active'); }
-    if(i < 3){
-      const line = document.getElementById(`line${i}`);
-      line.classList.toggle('filled', i < currentStep);
-    }
+    const wrap=document.querySelector('.step-dot-wrap[data-step="'+i+'"]');
+    const dot=document.getElementById('dot'+i);
+    wrap.classList.remove('active','done');dot.classList.remove('active','done');
+    if(i<currentStep){wrap.classList.add('done');dot.classList.add('done');}
+    else if(i===currentStep){wrap.classList.add('active');dot.classList.add('active');}
+    if(i<3) document.getElementById('line'+i).classList.toggle('filled',i<currentStep);
   }
-  document.getElementById('fieldBinanceUser').style.display =
-    selectedMethod === 'binance' ? 'block' : 'none';
+  const isBinance=(selectedMethod==='binance');
+  document.getElementById('fieldBinanceUser').style.display=isBinance?'block':'none';
 }
 
 function buildSummary(){
-  const email   = document.getElementById('fEmail').value;
-  const usd     = document.getElementById('fUsd').value;
-  const binUser = document.getElementById('fBinanceUser').value;
-  const file    = document.getElementById('fFile').files[0];
-  const metodoNames = {binance:'Binance (USDT)',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
-  const mxnEq = selectedMethod!=='binance' ? `&nbsp;<span style="color:var(--muted);font-size:11px">(≈ $${(parseFloat(usd)*RATE).toFixed(2)} MXN)</span>` : '';
-  let rows = `
-    <div class="summary-row">
-      <span class="sum-icon">💳</span>
-      <div><div class="sum-key">Método</div><div class="sum-val">${metodoNames[selectedMethod]}</div></div>
-    </div>
-    <div class="summary-row">
-      <span class="sum-icon">📧</span>
-      <div><div class="sum-key">Correo</div><div class="sum-val">${email}</div></div>
-    </div>
-    <div class="summary-row">
-      <span class="sum-icon">💰</span>
-      <div><div class="sum-key">Monto</div><div class="sum-val">${usd} ${selectedMethod==='binance'?'USDT':'USD'} ${mxnEq}</div></div>
-    </div>`;
-  if(selectedMethod==='binance'){
-    rows += `<div class="summary-row">
-      <span class="sum-icon">👤</span>
-      <div><div class="sum-key">Usuario Binance</div><div class="sum-val">${binUser}</div></div>
-    </div>`;
+  const email=document.getElementById('fEmail').value;
+  const usd=document.getElementById('fUsd').value;
+  const binUser=document.getElementById('fBinanceUser').value;
+  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria MX","oxxo":"OXXO PAY"};
+  const isBinance=(selectedMethod==='binance');
+  const mxnEq=(!isBinance)?' <span style="color:var(--muted);font-size:11px">(≈ $'+(parseFloat(usd)*RATE).toFixed(2)+' '+CURR_CODE+')</span>':'';
+  let rows='<div class="summary-row"><span class="sum-icon">💳</span><div><div class="sum-key">Método</div><div class="sum-val">'+(metNom[selectedMethod]||selectedMethod)+'</div></div></div>';
+  rows+='<div class="summary-row"><span class="sum-icon">📧</span><div><div class="sum-key">Correo</div><div class="sum-val">'+email+'</div></div></div>';
+  rows+='<div class="summary-row"><span class="sum-icon">💰</span><div><div class="sum-key">Monto</div><div class="sum-val">'+usd+' '+(isBinance?'USDT':'USD')+mxnEq+'</div></div></div>';
+  if(isBinance&&binUser) rows+='<div class="summary-row"><span class="sum-icon">👤</span><div><div class="sum-key">Usuario Binance</div><div class="sum-val">'+binUser+'</div></div></div>';
+  if(codigoRecarga) rows+='<div class="summary-row"><span class="sum-icon">🎟️</span><div><div class="sum-key">Código</div><div class="sum-val">'+codigoRecarga+'</div></div></div>';
+  if(savedFileData){
+    rows+='<div class="summary-row"><span class="sum-icon">🖼</span><div style="width:100%"><div class="sum-key">Comprobante</div><img class="sum-img" src="'+savedFileData.url+'" alt="Comprobante"></div></div>';
   }
-  if(codigoRecarga){
-    rows += `<div class="summary-row">
-      <span class="sum-icon">🎟️</span>
-      <div><div class="sum-key">Código de recarga</div><div class="sum-val">${codigoRecarga}</div></div>
-    </div>`;
-  }
-  if(file){
-    const url = URL.createObjectURL(file);
-    rows += `<div class="summary-row">
-      <span class="sum-icon">🖼</span>
-      <div style="width:100%">
-        <div class="sum-key">Comprobante</div>
-        <img class="sum-img" src="${url}" alt="Comprobante">
-      </div>
-    </div>`;
-  }
-  document.getElementById('summaryBox').innerHTML = rows;
+  document.getElementById('summaryBox').innerHTML=rows;
 }
 
+// FIX: Store file data persistently so it survives panel navigation
 function onFileChange(input){
-  const file = input.files[0];
-  if(!file) return;
-  const preview = document.getElementById('uploadPreview');
-  const img     = document.getElementById('previewImg');
-  const name    = document.getElementById('uploadName');
-  const btn     = document.getElementById('btnStep2Next');
-  const url = URL.createObjectURL(file);
-  img.src = url;
-  preview.style.display = 'block';
-  name.textContent = '✓ ' + file.name;
-  name.style.display = 'block';
-  btn.disabled = false;
-  document.getElementById('uploadZone').style.borderColor = 'var(--success)';
+  const file=input.files[0];
+  if(!file)return;
+  const url=URL.createObjectURL(file);
+  savedFileData={file,url};
+  document.getElementById('previewImg').src=url;
+  document.getElementById('uploadPreview').style.display='block';
+  document.getElementById('uploadName').textContent='✓ '+file.name;
+  document.getElementById('uploadName').style.display='block';
+  document.getElementById('btnStep2Next').disabled=false;
+  document.getElementById('uploadZone').style.borderColor='var(--success)';
 }
 
-const uz = document.getElementById('uploadZone');
-uz.addEventListener('dragover', e=>{ e.preventDefault(); uz.classList.add('drag'); });
-uz.addEventListener('dragleave', ()=>uz.classList.remove('drag'));
-uz.addEventListener('drop', e=>{
-  e.preventDefault(); uz.classList.remove('drag');
-  const files = e.dataTransfer.files;
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{
+  e.preventDefault();uz.classList.remove('drag');
+  const files=e.dataTransfer.files;
   if(files.length){
-    document.getElementById('fFile').files = files;
-    onFileChange(document.getElementById('fFile'));
+    const input=document.getElementById('fFile');
+    // Manually trigger since we can't set files from drop to input
+    const file=files[0];
+    const url=URL.createObjectURL(file);
+    savedFileData={file,url};
+    document.getElementById('previewImg').src=url;
+    document.getElementById('uploadPreview').style.display='block';
+    document.getElementById('uploadName').textContent='✓ '+file.name;
+    document.getElementById('uploadName').style.display='block';
+    document.getElementById('btnStep2Next').disabled=false;
+    uz.style.borderColor='var(--success)';
   }
 });
 
 async function sendForm(){
-  if(isSending || alreadySent) return;
-  const btnSend = document.getElementById('btnSend');
-  const sendIcon= document.getElementById('sendIcon');
-  const sendText= document.getElementById('sendText');
-  isSending = true;
-  btnSend.disabled = true;
-  btnSend.className = 'btn-next sending';
-  sendIcon.innerHTML = '<div class="spinner"></div>';
-  sendText.textContent = 'Enviando…';
-
-  const email   = document.getElementById('fEmail').value;
-  const usd     = document.getElementById('fUsd').value;
-  const binUser = document.getElementById('fBinanceUser').value;
-  const file    = document.getElementById('fFile').files[0];
-  const metNom  = {binance:'Binance',transferencia:'Transferencia bancaria',oxxo:'OXXO Pay'};
-
-  let texto = `🧾 NUEVO COMPROBANTE\n\n📧 Email: ${email}\n💳 Método: ${metNom[selectedMethod]}\n`;
-  if(selectedMethod==='binance'){
-    texto += `💰 Monto: ${usd} USDT\n👤 Usuario Binance: ${binUser}`;
-  } else {
-    texto += `💰 Monto: $${usd} USD\n💵 Monto MXN: $${(parseFloat(usd)*RATE).toFixed(2)}`;
-  }
-  if(codigoRecarga){
-    texto += `\n🎟️ Código de recarga: ${codigoRecarga}`;
-  }
-
-  try {
-    const fd = new FormData();
-    fd.append('chat_id', CHAT_ID);
-    fd.append('caption', texto);
-    fd.append('photo', file);
-
-    if(codigoRecarga){
-      const replyMarkup = {
-        inline_keyboard: [[
-          {text: '📋 Copiar Código', copy_text: {text: codigoRecarga}}
-        ]]
-      };
-      fd.append('reply_markup', JSON.stringify(replyMarkup));
-    }
-
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,{method:'POST',body:fd});
-  } catch(e) {}
-
-  alreadySent = true;
-  btnSend.disabled = true;
-  btnSend.className = 'btn-next done';
-  sendIcon.textContent = '✅';
-  sendText.textContent = 'Enviado';
-
-  const wrap3 = document.querySelector('.step-dot-wrap[data-step="3"]');
-  const dot3  = document.getElementById('dot3');
-  wrap3.classList.remove('active'); wrap3.classList.add('done');
-  dot3.classList.remove('active'); dot3.classList.add('done');
+  if(isSending||alreadySent)return;
+  if(!savedFileData){showErr('⚠️ No se encontró el comprobante');return;}
+  const btnSend=document.getElementById('btnSend');
+  const sendIcon=document.getElementById('sendIcon');
+  const sendText=document.getElementById('sendText');
+  isSending=true;btnSend.disabled=true;btnSend.className='btn-next sending';
+  sendIcon.innerHTML='<div class="spinner"></div>';sendText.textContent='Enviando…';
+  const email=document.getElementById('fEmail').value;
+  const usd=document.getElementById('fUsd').value;
+  const binUser=document.getElementById('fBinanceUser').value;
+  const isBinance=(selectedMethod==='binance');
+  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria MX","oxxo":"OXXO PAY"};
+  let texto='🧾 NUEVO COMPROBANTE\n\n📧 Email: '+email+'\n💳 Método: '+(metNom[selectedMethod]||selectedMethod)+'\n';
+  if(isBinance){texto+='💰 Monto: '+usd+' USDT\n👤 Usuario Binance: '+binUser;}
+  else{texto+='💰 Monto: $'+usd+' USD\n💵 Equivalente: $'+(parseFloat(usd)*RATE).toFixed(2)+' '+CURR_CODE;}
+  if(codigoRecarga) texto+='\n🎟️ Código: '+codigoRecarga;
+  try{
+    const fd=new FormData();
+    fd.append('chat_id',CHAT_ID);fd.append('caption',texto);fd.append('photo',savedFileData.file);
+    if(codigoRecarga) fd.append('reply_markup',JSON.stringify({inline_keyboard:[[{text:'📋 Copiar Código',copy_text:{text:codigoRecarga}}]]}));
+    await fetch('https://api.telegram.org/bot'+BOT_TOKEN+'/sendPhoto',{method:'POST',body:fd});
+  }catch(e){}
+  alreadySent=true;btnSend.disabled=true;btnSend.className='btn-next done';
+  sendIcon.textContent='✅';sendText.textContent='Enviado';
+  document.querySelector('.step-dot-wrap[data-step="3"]').classList.replace('active','done');
+  document.getElementById('dot3').classList.replace('active','done');
   document.getElementById('line2').classList.add('filled');
-  document.getElementById('summaryBox').style.display = 'none';
+  document.getElementById('summaryBox').style.display='none';
   document.getElementById('successScreen').classList.add('show');
-  document.getElementById('btnBackStep3').style.display = 'none';
-
-  let secs = 20;
-  const c = document.getElementById('countNum');
-  const t = setInterval(()=>{ secs--; c.textContent=secs; if(secs<=0){ clearInterval(t); window.location.href='https://wsservermx.com'; } }, 1000);
+  document.getElementById('btnBackStep3').style.display='none';
+  let secs=30;
+  const counter=document.getElementById('countNum');
+  const t=setInterval(()=>{secs--;counter.textContent=secs;if(secs<=0){clearInterval(t);window.location.href='https://wsservermx.com/panel/services';}},1000);
 }
 
-function copiar(el, texto){
+function copiar(el,texto){
   navigator.clipboard.writeText(texto);
-  const s = document.createElement('span');
-  s.className = 'copiado'; s.textContent = '✓ Copiado';
-  el.after(s); setTimeout(()=>s.remove(), 1500);
+  const s=document.createElement('span');s.className='copiado';s.textContent='✓ Copiado';
+  el.after(s);setTimeout(()=>s.remove(),1500);
 }
 
 updateProgress();
