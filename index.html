@@ -252,7 +252,7 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
           <div class="method-card" data-method="transferencia" onclick="selectMethod(this)">
             <span class="method-icon">🏦</span>
             <div class="method-info">
-              <div class="method-name">Transferencia Bancaria MX</div>
+              <div class="method-name">Transferencia Bancaria</div>
               <div class="method-desc">KLAR · SOLO MÉXICO · Tiempo varía según el banco emisor</div>
             </div>
             <div class="method-check">✓</div>
@@ -521,7 +521,7 @@ function buildSummary(){
   const email=document.getElementById('fEmail').value;
   const usd=document.getElementById('fUsd').value;
   const binUser=document.getElementById('fBinanceUser').value;
-  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria MX","oxxo":"OXXO PAY"};
+  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria","oxxo":"OXXO PAY"};
   const isBinance=(selectedMethod==='binance');
   const mxnEq=(!isBinance)?' <span style="color:var(--muted);font-size:11px">(≈ $'+(parseFloat(usd)*RATE).toFixed(2)+' '+CURR_CODE+')</span>':'';
   let rows='<div class="summary-row"><span class="sum-icon">💳</span><div><div class="sum-key">Método</div><div class="sum-val">'+(metNom[selectedMethod]||selectedMethod)+'</div></div></div>';
@@ -582,7 +582,7 @@ async function sendForm(){
   const usd=document.getElementById('fUsd').value;
   const binUser=document.getElementById('fBinanceUser').value;
   const isBinance=(selectedMethod==='binance');
-  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria MX","oxxo":"OXXO PAY"};
+  const metNom={"binance":"Binance (USDT)","transferencia":"Transferencia Bancaria","oxxo":"OXXO PAY"};
   let texto='🧾 NUEVO COMPROBANTE\n\n📧 Email: '+email+'\n💳 Método: '+(metNom[selectedMethod]||selectedMethod)+'\n';
   if(isBinance){texto+='💰 Monto: '+usd+' USDT\n👤 Usuario Binance: '+binUser;}
   else{texto+='💰 Monto: $'+usd+' USD\n💵 Equivalente: $'+(parseFloat(usd)*RATE).toFixed(2)+' '+CURR_CODE;}
