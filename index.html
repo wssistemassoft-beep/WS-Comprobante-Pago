@@ -349,7 +349,7 @@ input:focus ~ .i-turtle{transform:translateY(-50%) scale(1);opacity:1;animation:
           <div class="success-title">¡Comprobante enviado!</div>
           <div class="success-sub">Lo recibimos correctamente. En breve procesaremos tu pago.</div>
           <div class="success-warn">⚠️ IMPORTANTE: No envíes el comprobante más de una vez. Los envíos duplicados pueden atorar tu solicitud y puede tardar en resolverse hasta 4 horas.</div>
-          <div class="countdown-txt">Redirigiendo en <b id="countNum">30</b> segundos…</div>
+          <div class="countdown-txt">Redirigiendo en <b id="countNum">40</b> segundos…</div>
         </div>
       </div>
 
@@ -601,7 +601,7 @@ async function sendForm(){
   document.getElementById('summaryBox').style.display='none';
   document.getElementById('successScreen').classList.add('show');
   document.getElementById('btnBackStep3').style.display='none';
-  let secs=30;
+  let secs=40;
   const counter=document.getElementById('countNum');
   const t=setInterval(()=>{secs--;counter.textContent=secs;if(secs<=0){clearInterval(t);window.location.href='https://wsservermx.com/panel/services';}},1000);
 }
