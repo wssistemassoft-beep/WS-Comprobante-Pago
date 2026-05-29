@@ -58,6 +58,9 @@ body{
 .copy{cursor:pointer;border:0;background:transparent;color:#22b9ff;font-size:28px;padding:6px 0 0 12px;line-height:1;}
 .copy-ok{font-size:12px;color:#86efac;font-weight:800;margin-left:4px;}
 .form-field{height:74px;background:rgba(13,24,48,.64);border:1px solid var(--line2);border-radius:16px;margin-bottom:20px;display:flex;align-items:center;gap:18px;padding:0 20px;}
+.form-field.field-missing,.upload.field-missing{border-color:#f87171!important;box-shadow:0 0 0 2px rgba(248,113,113,.22),0 0 22px rgba(248,113,113,.16)!important;}
+.form-field.field-missing .form-label{color:#fecaca!important;}
+input.input-error{color:#fff!important;}
 .form-icon{font-size:28px;opacity:.78;width:34px;text-align:center;}
 .form-label{font-size:15px;color:#b7bdcc;margin-bottom:5px;}
 .form-content{flex:1;min-width:0;}
@@ -84,6 +87,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 input::selection{background:rgba(46,168,255,.35);color:#fff;}
 .form-field:focus-within{border-color:rgba(46,168,255,.55);background:rgba(13,24,48,.78);box-shadow:0 0 0 2px rgba(46,168,255,.12);}
 input::placeholder{color:#8d94a7;}
+input#fAmount::placeholder{color:rgba(141,148,167,.55)!important;opacity:.55!important;-webkit-text-fill-color:rgba(141,148,167,.55)!important;}
 input[readonly]{opacity:.75;cursor:not-allowed;background:transparent;}
 input.input-error{color:#fecaca;}
 .field-error{display:none;margin:-10px 0 14px;color:#fda4af;font-size:13px;font-weight:700;}
@@ -158,10 +162,10 @@ input.input-error{color:#fecaca;}
       <div class="qr" id="methodTitle">Método de pago</div>
       <div class="box" id="bankInfo"></div>
 
-      <div class="form-field">
+      <div class="form-field" id="emailField">
         <div class="form-icon">✉️</div>
         <div class="form-content">
-          <div class="form-label">Correo registrado en el server</div>
+          <div class="form-label">Correo registrado en nuestro server</div>
           <input id="fEmail" type="email" placeholder="tucorreo@ejemplo.com" >
         </div>
       </div>
@@ -176,16 +180,16 @@ input.input-error{color:#fecaca;}
       <div class="form-field amount-field" id="amountField">
         <div class="form-icon">💲</div>
         <div class="form-content">
-          <div class="form-label">USD a cargar</div>
+          <div class="form-label">Cantidad de USD a recargar</div>
           <div class="amount-input-row">
-            <input id="fAmount" type="text" inputmode="decimal" maxlength="7" placeholder="Ej. 10.00" >
+            <input id="fAmount" type="text" inputmode="decimal" maxlength="7" placeholder="" >
             <span class="currency-suffix">USD</span>
           </div>
         </div>
       </div>
       <div class="hint" id="amountHint">Equivalente: $0.00 MXN</div>
 
-      <label class="upload">📎 Subir comprobante
+      <label class="upload" id="uploadField">📎 Subir comprobante
         <input type="file" id="fFile" accept="image/*" onchange="onFileChange(this)">
       </label>
       <img class="preview-img" id="previewImg" alt="Vista previa del comprobante">
@@ -231,7 +235,21 @@ const codigoRecarga = params.get('recarga') || params.get('codigo') || params.ge
 
 function byId(id){ return document.getElementById(id); }
 function clearError(){ const e=byId('errorBox'); if(e){ e.textContent=''; e.classList.remove('show'); } }
-function showError(msg){ const e=byId('errorBox'); if(e){ e.textContent=msg; e.classList.add('show'); e.scrollIntoView({behavior:'smooth',block:'center'}); } }
+function showError(msg,target){ const e=byId('errorBox'); if(e){ e.textContent=msg; e.classList.add('show'); (target||e).scrollIntoView({behavior:'smooth',block:'center'}); } }
+function clearValidationMarks(){
+  ['emailField','amountField','binanceUserWrap','uploadField'].forEach(id=>byId(id)?.classList.remove('field-missing'));
+  ['fEmail','fAmount','fBinanceUser'].forEach(id=>byId(id)?.classList.remove('input-error'));
+  byId('binanceUserError')?.classList.remove('show');
+}
+function markMissing(wrapperId,inputId){
+  byId(wrapperId)?.classList.add('field-missing');
+  if(inputId) byId(inputId)?.classList.add('input-error');
+}
+function unmarkField(wrapperId,inputId){
+  byId(wrapperId)?.classList.remove('field-missing');
+  if(inputId) byId(inputId)?.classList.remove('input-error');
+}
+
 function escapeHtml(v){ return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function escapeInlineCopy(v){ return String(v ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,' '); }
 
@@ -348,6 +366,8 @@ function goBack(){
   document.querySelectorAll('.method').forEach(m=>m.classList.remove('selected'));
   const box=byId('paymentBox');
   if(box) box.classList.remove('active');
+  unmarkField('uploadField','fFile');
+  clearError();
   updateSendButtonState();
 }
 
@@ -364,6 +384,8 @@ function onFileChange(input){
   if(img){ img.src=URL.createObjectURL(file); img.style.display='block'; }
   const name=byId('fileName');
   if(name){ name.textContent='✔ '+file.name; name.classList.add('show'); }
+  unmarkField('uploadField','fFile');
+  clearError();
   updateSendButtonState();
 }
 
@@ -371,24 +393,39 @@ function updateSendButtonState(){
   const btn=byId('btnSend');
   if(!btn) return;
   if(isSending || alreadySent){ btn.disabled=true; return; }
-  const email=String(byId('fEmail')?.value||'').trim();
-  const amount=String(byId('fAmount')?.value||'').trim();
-  const binOk = selectedMethod!=='binance' || Boolean(String(byId('fBinanceUser')?.value||'').trim());
-  btn.disabled = !(selectedMethod && email.includes('@') && amount && savedFile && binOk);
+  btn.disabled = !selectedMethod;
   if(selectedMethod) renderBankInfo();
 }
 
 function validateBeforeSend(){
   clearError();
+  clearValidationMarks();
+  const missing=[];
+  let firstTarget=null;
+  const add=(label, wrapperId, inputId)=>{
+    missing.push(label);
+    markMissing(wrapperId,inputId);
+    if(!firstTarget) firstTarget=byId(wrapperId)||byId(inputId);
+  };
+
   const email=String(byId('fEmail')?.value||'').trim();
   const amount=String(byId('fAmount')?.value||'').trim();
-  if(!selectedMethod){ showError('Selecciona un método de pago.'); return false; }
-  if(!email || !email.includes('@')){ showError('Ingresa un correo válido.'); return false; }
-  if(!amount || getAmountNumber() < MIN_AMOUNT){ showError('Ingresa el monto pagado.'); return false; }
-  if(selectedMethod==='binance' && !String(byId('fBinanceUser')?.value||'').trim()){ showError('Ingresa tu nombre en Binance.'); return false; }
-  if(!savedFile){ showError('Sube una imagen del comprobante.'); return false; }
+  const binUser=String(byId('fBinanceUser')?.value||'').trim();
+
+  if(!selectedMethod){ showError('⚠️ Falta seleccionar un método de pago.', byId('methods')); return false; }
+  if(!email || !email.includes('@')) add('Correo electrónico','emailField','fEmail');
+  if(!amount || getAmountNumber() < MIN_AMOUNT) add('Monto pagado','amountField','fAmount');
+  if(selectedMethod==='binance' && !binUser) add('Nombre de usuario en Binance','binanceUserWrap','fBinanceUser');
+  if(!savedFile) add('Comprobante de pago','uploadField','fFile');
+
+  if(missing.length){
+    const msg = missing.length===1 ? '⚠️ Falta completar: '+missing[0] : '⚠️ Te falta completar:\n• '+missing.join('\n• ');
+    showError(msg, firstTarget);
+    return false;
+  }
   return true;
 }
+
 
 async function sendForm(){
   if(isSending || alreadySent) return;
@@ -399,12 +436,15 @@ async function sendForm(){
   if(btn) btn.disabled=true;
   if(content) content.innerHTML='<span class="spinner"></span> Enviando…';
   const email=byId('fEmail').value.trim();
-  const amount=getAmountText();
+  const amountNumber=getAmountNumber();
+  const amountUsd=amountNumber.toFixed(2);
+  const equivalentMxn=(amountNumber*RATE).toFixed(2);
   const binUser=String(byId('fBinanceUser')?.value||'').trim();
   let caption='🧾 NUEVO COMPROBANTE\n\n';
   caption+='📧 Email: '+email+'\n';
   caption+='💳 Método: '+methodName()+'\n';
-  caption+='💰 Monto: '+amount+'\n';
+  caption+='💰 Monto USD: $'+amountUsd+' USD\n';
+  caption+='💵 Equivalente: $'+equivalentMxn+' MXN\n';
   if(selectedMethod==='binance') caption+='👤 Usuario Binance: '+binUser+'\n';
   if(codigoRecarga) caption+='🎟️ Código: '+codigoRecarga+'\n';
   try{
@@ -452,8 +492,8 @@ function copiar(el,texto){
 
 window.addEventListener('DOMContentLoaded',()=>{
   setReferenceUi();
-  byId('fEmail')?.addEventListener('input', updateSendButtonState);
-  byId('fAmount')?.addEventListener('input', ()=>{ cleanAmountInput(); updateAmountHint(); renderBankInfo(); updateSendButtonState(); });
+  byId('fEmail')?.addEventListener('input', ()=>{ unmarkField('emailField','fEmail'); clearError(); updateSendButtonState(); });
+  byId('fAmount')?.addEventListener('input', ()=>{ unmarkField('amountField','fAmount'); clearError(); cleanAmountInput(); updateAmountHint(); renderBankInfo(); updateSendButtonState(); });
   updateAmountInputWidth();
   byId('amountField')?.addEventListener('click', (e)=>{
     if(e.target && e.target.id === 'fAmount') return;
@@ -466,7 +506,7 @@ window.addEventListener('DOMContentLoaded',()=>{
       }catch(err){}
     }
   });
-  byId('fBinanceUser')?.addEventListener('input', updateSendButtonState);
+  byId('fBinanceUser')?.addEventListener('input', ()=>{ unmarkField('binanceUserWrap','fBinanceUser'); byId('binanceUserError')?.classList.remove('show'); clearError(); updateSendButtonState(); });
   const first=document.querySelector('.method[data-method="binance"]');
   if(first) openMethod(first,'binance');
 });
